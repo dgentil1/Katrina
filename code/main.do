@@ -12,30 +12,30 @@
  ///                                                                             ///
  ///  HOW TO USE: The following are the main instructions to use this program.   ///
  ///                                                                             ///
- ///  1) Set the relevant paths in your computer. You need to provide:		 	 ///
+ ///  1) Set the relevant paths in your computer. You need to provide:		 ///
  ///	project         -> folder where all the other folders are stored         ///
- ///										 									 ///
- ///	code     	    -> subfolder where dofiles are stored            		 ///
+ ///										 ///
+ ///	code            -> subfolder where dofiles are stored            	 ///
  ///     dofiles         -> subfolder with do files for stata                    ///
  ///      datafix         -> subfolder with do files for preparing the data      ///
  ///      mcintosh        -> subfolder with do files for replicating mcintosh    ///
- ///      synthetic       -> subfolder with do files for scm	     		     ///
- ///      did             -> subfolder with do files for diff-in-diff			 ///
- ///																			 ///
+ ///      synthetic       -> subfolder with do files for scm	     		 ///
+ ///      did             -> subfolder with do files for diff-in-diff		 ///
+ ///										 ///
  ///	rawdata     	-> subfolder where data sets are stored              	 ///
- ///     raw_asec	     -> subfolder where asec data sets are stored     		 ///
- ///										 									 ///
- ///    gis				-> subfolder where gis data sets are stored				 ///
- ///     layers			 -> subfolder where layers data are stored				 ///
- ///   																			 ///
- ///    workdata   		-> subfolder where worked data are stored    			 ///
+ ///     raw_asec	 -> subfolder where asec data sets are stored     	 ///
+ ///										 ///
+ ///    gis		-> subfolder where gis data sets are stored		 ///
+ ///     layers		 -> subfolder where layers data are stored		 ///
+ ///   										 ///
+ ///    workdata   	-> subfolder where worked data are stored    		 ///
  ///     work_asec       -> subfolder where asec worked data are stored          ///
  ///                                                                          	 ///
- ///    figures         -> subfolder where figures are stored					 ///
- ///										 									 ///
- ///    tables          -> subfolder where tables are stored					 ///
- ///																			 ///
- ///    temp            -> subfolder where temporary files are stored			 ///
+ ///    figures         -> subfolder where figures are stored			 ///
+ ///										 ///
+ ///    tables          -> subfolder where tables are stored			 ///
+ ///										 ///
+ ///    temp            -> subfolder where temporary files are stored		 ///
  ///                                                                             ///
  ///  2) After reading the global variables with the paths, and the programs in  ///
  ///     each of the subordinate files, you need to run each of the programs     ///
@@ -43,20 +43,20 @@
  ///     at the end of this main file. You can comment or uncomment as needed.   ///
  ///                                                                             ///
  ///  3) The programs are:                                                       ///
- ///	datafix   -> ***							     						 ///  
- ///    mcintosh  -> ***														 ///
- ///    synth     -> *** 													     ///
- ///    did       -> ***						 								 ///
+ ///	datafix   -> ***							 ///  
+ ///    mcintosh  -> ***							 ///
+ ///    synth     -> *** 							 ///
+ ///    did       -> ***						 	 ///
  ///                                                                             ///
  ///  4) There are also auxiliary programs called by the four above:             /// // check this number at the end!!!
  ///   a) Called by datafix                                                      ///
- ///      d_precleaning														     ///
- ///      d_idkatrina										 					 /// 
- ///      d_endogeneity															 ///
- ///   b) Called by synth	                                                     ///
- ///      s_scm																     ///
- ///      s_pretrends										 					 /// 
- ///      s_placebos															 ///
+ ///      d_precleaning								 ///
+ ///      d_idkatrina								 /// 
+ ///      d_endogeneity								 ///
+ ///   b) Called by synth	                                                 ///
+ ///      s_scm								         ///
+ ///      s_pretrends								 /// 
+ ///      s_placebos								 ///
  ///                                                                             ///
  ///  5) The last input for each program should equal 1 if you want nice stata   ///
  ///     output to be displayed (recommended), or anything else (e.g. 0) to      ///
@@ -92,19 +92,19 @@
 	
   global code "${project}Code/"
     global dofiles "${code}Dofiles/2017_05/"
-	  global datafix "${dofiles}Datafix/"
-	  global mcintosh "${dofiles}McIntosh/"
-	  global synthetic "${dofiles}Synthetic/"
-	  global did "${dofiles}DiffinDiff/"
+      global datafix "${dofiles}Datafix/"
+      global mcintosh "${dofiles}McIntosh/"
+      global synthetic "${dofiles}Synthetic/"
+      global did "${dofiles}DiffinDiff/"
 	
   global rawdata "${project}Rawdata/"
-	global raw_asec "${rawdata}Raw_asec/"
+    global raw_asec "${rawdata}Raw_asec/"
   
   global gis "${project}GIS/"
     global layers "${gis}Layers/"	
   
   global workdata "${project}Workdata/"
-	global work_asec "${workdata}Work_asec/"
+    global work_asec "${workdata}Work_asec/"
   
   global figures "${project}Figures/"			
   
