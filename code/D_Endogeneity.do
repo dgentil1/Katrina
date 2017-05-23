@@ -5,8 +5,8 @@
 
   program define d_endogeneity
 	
-	${qui} insheet using "/Users/marinabosque/Desktop/working_paper/GIS/Layers/distance_matrix.csv", clear
-	
+	${qui} import delimited "${layers}distance_matrix.csv", encoding(ISO-8859-1) clear
+
 	drop targetid
 	rename msa metarea   
 	${qui} drop if missing(metarea)
