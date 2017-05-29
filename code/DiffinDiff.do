@@ -6,7 +6,7 @@
   program define did
 
     foreach city in houston dallas fayetteville {
-		use "${work_asec}controltrends_`city'.dta", clear 
+		use "../derived_asec/controltrends_`city'.dta", clear 
 		
 		local outcome_vars	= "lr_w_wage emplyd inactive"
 		local stub_list = "Log-wage Employment Inactivity"
@@ -30,7 +30,7 @@
 	    local education: word `i' of `education_levels'
 		
 		foreach city in houston dallas fayetteville {
-			use "${work_asec}controltrends_`city'_`education'.dta", clear 
+			use "../derived_asec/controltrends_`city'_`education'.dta", clear 
 			
 			local outcome_vars	= "lr_w_wage emplyd inactive"
 			local stub_list = "Log-wage Employment Inactivity"
@@ -121,7 +121,7 @@
 	
 	eststo: reg `var' `city' postkat did_`city' if synth_sample==1, r 
 	
-	esttab using "${tables}did_synth_`var'_`city'`educ_level'.tex", label se ar2 compress replace nonotes ///
+	esttab using "../tables/did_synth_`var'_`city'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(Diff in Diff for `stub'\label{tab1}) ///
 		   mtitles("Synthetic Control") ///
 		   addnote("{it:Note:} Robust standard errors in parentheses.")
@@ -137,7 +137,7 @@
     syntax, outcomes(string) stub(string) [educ_level(string) educ_stub(string)]
 	
 	foreach sample in treat control {
-		use "${work_asec}CPSASECfinal.dta", clear
+		use "../derived_asec/CPSASECfinal.dta", clear
 
 		drop if kat_affected == 1
 		drop if evac == 1
@@ -148,11 +148,11 @@
 			
 		collapse `outcomes' if `sample'==1 [aw=wtsupp], by(year) 
 		gen `sample' = 1
-		save "${temp}trend_`sample'`educ_level'.dta", replace 
-		cap saveold "${temp}trend_`sample'`educ_level'.dta", v(12) replace 
+		save "../temp/trend_`sample'`educ_level'.dta", replace 
+		cap saveold "../temp/trend_`sample'`educ_level'.dta", v(12) replace 
 	}
 	
-	append using "${temp}trend_treat`educ_level'.dta"
+	append using "../temp/trend_treat`educ_level'.dta"
 	replace treat=0 if treat ==.
 	replace control=0 if control==.
 	
@@ -178,7 +178,7 @@
 		   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line)""and control group (red line) across time. The vertical line, representing the beginning of the""post-treatment period, is depicted for the year 2005. The top figure shows the graph for the logarithm of""weekly wages, the figure in the middle shows it for the employment and the bottom figure for inactivity.", size(vsmall)) ///
 		   caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "${figures}checkslong`educ_level'.png", replace
+	graph export "../figures/checkslong`educ_level'.png", replace
 
   end
 
@@ -190,7 +190,7 @@
 
     syntax, outcomes(string) controls(string) [educ_level(string) educ_stub(string)]
 
-	use "${work_asec}CPSASECfinal.dta", clear
+	use "../derived_asec/CPSASECfinal.dta", clear
 
 	drop if kat_affected==1
 	drop if evac==1
@@ -215,7 +215,7 @@
 			   if (treat ==1 | control==1) [aw=wtsupp], r cluster(metcode2) 
 	}
 
-	esttab using "${tables}diffindiff`educ_level'.tex", label se ar2 compress replace nonotes ///
+	esttab using "../tables/diffindiff`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`educ_stub' Differences in Differences for Treatment vs Control Group, CPS March ASEC Sample \label{tab5}) keep(treat postkat did_treat) ///
 		   mtitles("Log Wage" "Employment Rate" "Inactivity")   ///
 		   addnote("{Note:} Observations are weighted using CPS Supplement weights, robust standard errors in parentheses" "are clustered at the metropolitan area level. We include individual level covariates (age," "age-squared, sex,marital status, the interaction of sex and marital status, education, ethnicity, industry and occupation)." "We also use year and metropolitan area fixed effects." "Source: CPS March Supplement 1996 - 2014.")

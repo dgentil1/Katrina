@@ -3,7 +3,7 @@
 
   ***** Define Program 
 
-  program define synth
+  program synth_control
 
   ***** Program starts
 

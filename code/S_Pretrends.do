@@ -5,7 +5,7 @@
 
   program define s_pretrends
 
-	use "${work_asec}CPSASECfinal.dta", clear
+	use "../derived_asec/CPSASECfinal.dta", clear
 
 	local control_vars = "unem wksunem1 hours_worked poor " + ///
 		"sex white other black manuf bluecol whitecol " + ///
@@ -15,9 +15,6 @@
 	local outcome_vars	= "lr_w_wage emplyd inactive"
 	
 	local stub_list = "Log-wage Employment Inactivity"
-    
-	s_pre_mcintosh, outcomes(`outcome_vars') controls(`control_vars') ///
-	    city(houston) tr_period(2006) stub(`stub_list')
 	
 	s_pre_scm, outcomes(`outcome_vars') controls(`control_vars') ///
 			city(houston) tr_period(2006) stub(`stub_list')	
@@ -45,56 +42,6 @@
 	
   end
 
-*----------------------------- Pretrends McIntosh -----------------------------*
-
-  ***** Define Program 
-
-  program define s_pre_mcintosh
-  
-	syntax [if], outcomes(string) controls(string) city(string) tr_period(int) stub(string)
-
-	use "${work_asec}controltrends_`city'.dta", clear
-
-	merge 1:1 year using "${temp}mcintoshcontrol.dta", nogen
-	save "${work_asec}controltrends_`city'.dta", replace
-	cap saveold "${work_asec}controltrends_`city'.dta", v(12) replace
-
-	local number_outcomes: word count `outcomes'
-	
-	forval i = 1/`number_outcomes' {
-		local outcome_var: word `i' of `outcomes'
-		local stub_var: word `i' of `stub'
-		local vertical = `tr_period' - 1
-		local city_legend = proper("`city'")
-		
-		twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
-			   (line synthetic_`city'_`outcome_var' year, lpattern(dash) lcolor(black)) ///
-			   (line `city'_`outcome_var'_unaffected year, lcolor(cranberry)), xtitle("Year") ///
-			   ytitle("`stub_var'") xline(`vertical', lcolor(black) lpattern(dot)) ///
-			   legend(label(1 `city_legend') label(2 "Synthetic `city_legend'") ///
-			   label(3 "McIntosh Control")) title(`stub_var', color(black) size(medium)) ///
-			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") ///
-			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(trend_`outcome_var',replace)
-    }
-	
-	local number_outcomes: word count `outcomes'
-	
-	forval i = 1/`number_outcomes' {
-		local outcome_var: word `i' of `outcomes'
-		local plots = "`plots' " + "trend_`outcome_var'"
-	}
-	
-	local outcome1: word 1 of `outcomes' 	
-	
-	grc1leg `plots', rows(3) legendfrom(trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
-		   graphregion(color(white)) title({bf: Outcome time trends}, color(black) size(small)) ///
-		   note("{it:Note:} Each figure shows the outcome variable for Houston (blue solid line), Synthetic""control (dashed line) and McIntosh control (red solid line) in the period 1994-2014.""The top figure shows the graph for the logarithm of weekly wages,""the figure in the middle shows it for employment and the bottom figure for inactivity.""The vertical line is depicted for year 2005.", ///
-		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
-	graph display, ysize(8.5) xsize(6.5)
-	graph export "${figures}alltrends_`city'mcintosh.png", replace
-	
-  end	
-
 *-------------------------------- Pretrends SCM -------------------------------*
 
   ***** Define Program 
@@ -103,7 +50,7 @@
   
 	syntax [if], outcomes(string) controls(string) city(string) tr_period(int) stub(string)
 
-	use "${work_asec}controltrends_`city'.dta", clear
+	use "../derived_asec/controltrends_`city'.dta", clear
 
 	local number_outcomes: word count `outcomes'
 	
@@ -138,7 +85,7 @@
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic""control (dashed line) in the period 1994-2014. The top figure shows the""graph for the logarithm of weekly wages, the figure in the middle shows it for""employment and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "${figures}alltrends_`city'.png", replace
+	graph export "../figures/alltrends_`city'.png", replace
 
   end	
   
@@ -150,7 +97,7 @@
 
 	syntax, outcomes(string) controls(string) city(string) tr_period(int) stub(string) level(string) title(string)
 
-	use "${work_asec}controltrends_`city'`level'.dta", clear
+	use "../derived_asec/controltrends_`city'`level'.dta", clear
 
 	local number_outcomes: word count `outcomes'
 	forval i = 1/`number_outcomes' {
@@ -182,7 +129,7 @@
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic control (dashed line)"" in the period 1994-2014. The top figure shows the graph for the""logarithm of weekly wages, the figure in the middle shows it for employment and the bottom figure for""inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "${figures}alltrends_`city'`level'.png", replace
+	graph export "../figures/alltrends_`city'`level'.png", replace
 	
   end
 

@@ -7,7 +7,7 @@
 	
  ***** Computing decriptives: evacuees vs nonevacuees
  
- 	use "${temp}CPSASEC.dta", clear
+ 	use "../temp/CPSASEC.dta", clear
  
 	keep if year==2006
 
@@ -30,14 +30,14 @@
 
 	mkmat evac_mean nevac_mean diff_mean se_diff_mean, matrix(output)
 
-	mat2txt, matrix(output) saving("${tables}descriptive_evac_vs_nevac.txt") replace ///
+	mat2txt, matrix(output) saving("../tables/descriptive_evac_vs_nevac.txt") replace ///
 		  	 format(%20.5f) title(<tab:descriptive>)
 	// Computing decriptives: evacuees vs nonevacuees
 	
 
  ***** Computing decriptives: labor status of evacuees
 	
-	use "${work_asec}CPSASECfinal.dta", clear
+	use "../derived_asec/CPSASECfinal.dta", clear
 	
 	keep if year==2006
 	
@@ -57,7 +57,7 @@
 	tabstat emplyd inactive unem hours_worked if (treat==1 & evac==1) [aw=wtsupp], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 
-	mat2txt, matrix(output) saving("${tables}labor_status_sample.txt") replace ///
+	mat2txt, matrix(output) saving("../tables/labor_status_sample.txt") replace ///
 		  	 format(%20.5f) title(<tab:labor_status_sample>)
 	
   end

@@ -7,7 +7,7 @@
   
   ***** Create the distance to New Orleans dataset 
   	
-	import delimited "${layers}distance_matrix.csv", encoding(ISO-8859-1) clear
+	import delimited "../GIS/layers/distance_matrix.csv", encoding(ISO-8859-1) clear
 	
 	drop targetid
 	rename msa metarea   
@@ -24,17 +24,17 @@
 
 	collapse (mean) distance, by (metcode2)
 
-	save "${temp}distance_matrix.dta", replace
-	cap saveold "${temp}distance_matrix.dta", v(12) replace
+	save "../temp/distance_matrix.dta", replace
+	cap saveold "../temp/distance_matrix.dta", v(12) replace
 
   ***** Merge
   
-	use "${work_asec}lot_evac_list_to_match.dta", clear
+	use "../derived_asec/lot_evac_list_to_match.dta", clear
 
-	merge 1:1 metcode2 using "${temp}distance_matrix.dta", nogen
-	merge 1:1 metcode2 using "${work_asec}lot_evac_list.dta", nogen
+	merge 1:1 metcode2 using "../temp/distance_matrix.dta", nogen
+	merge 1:1 metcode2 using "../derived_asec/lot_evac_list.dta", nogen
 
-	export delimited using "${layers}distance_matrix_matched.csv", replace
+	export delimited using "../GIS/layers/distance_matrix_matched.csv", replace
 
 	label var distance "Distance to New Orleans"
 	label var unem_1 "Average unemployment rate, last year"
@@ -51,7 +51,7 @@
 	eststo: reg share_evac distance unem_1 lr_w_wage_1
 	eststo: reg share_evac distance unem_5 lr_w_wage_5
 
-	esttab using "${tables}treatment_assignment.tex", r2 se nocons ///
+	esttab using "../tables/treatment_assignment.tex", r2 se nocons ///
 		   label compress replace title(Treatment assignment)
 		
   end

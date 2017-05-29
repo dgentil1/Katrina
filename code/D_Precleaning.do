@@ -9,7 +9,7 @@
 
  ***** Open dataset
 
-	use "${raw_asec}rawCPSASEC.dta", clear 
+	use "../raw/rawCPSASEC.dta", clear 
 	// Using CPS ASEC (March supplement) data from 1996 to 2014
 	
  ***** Keeping needed variables
@@ -193,6 +193,11 @@
 		  // SORTED BY METAREA?
 
 		label var id "Individual identifier"
+		
+	* saving dataset
+	
+	save "../temp/CPSASEC.dta", replace
+	cap saveold "../temp/CPSASEC.dta", v(12) replace
 
   end
 
