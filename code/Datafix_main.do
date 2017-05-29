@@ -17,6 +17,9 @@
 	di "     Identifying Katrina evacuees and affected areas", as text
 	d_idkatrina 
 	
+	di "     Descriptive statistics", as text
+	d_descriptive
+
 	di "     Controlling against endogeneity in relocation", as text
 	d_endogeneity 
 	
