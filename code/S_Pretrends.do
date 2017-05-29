@@ -5,7 +5,7 @@
 
   program define s_pretrends
 
-	${qui} use "${work_asec}CPSASECfinal.dta", clear
+	use "${work_asec}CPSASECfinal.dta", clear
 
 	local control_vars = "unem wksunem1 hours_worked poor " + ///
 		"sex white other black manuf bluecol whitecol " + ///
@@ -53,10 +53,10 @@
   
 	syntax [if], outcomes(string) controls(string) city(string) tr_period(int) stub(string)
 
-	${qui} use "${work_asec}controltrends_`city'.dta", clear
+	use "${work_asec}controltrends_`city'.dta", clear
 
-	${qui} merge 1:1 year using "${temp}mcintoshcontrol.dta", nogen
-	${qui} save "${work_asec}controltrends_`city'.dta", replace
+	merge 1:1 year using "${temp}mcintoshcontrol.dta", nogen
+	save "${work_asec}controltrends_`city'.dta", replace
 	cap saveold "${work_asec}controltrends_`city'.dta", v(12) replace
 
 	local number_outcomes: word count `outcomes'
@@ -67,7 +67,7 @@
 		local vertical = `tr_period' - 1
 		local city_legend = proper("`city'")
 		
-		${qui} twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
+		twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
 			   (line synthetic_`city'_`outcome_var' year, lpattern(dash) lcolor(black)) ///
 			   (line `city'_`outcome_var'_unaffected year, lcolor(cranberry)), xtitle("Year") ///
 			   ytitle("`stub_var'") xline(`vertical', lcolor(black) lpattern(dot)) ///
@@ -86,12 +86,12 @@
 	
 	local outcome1: word 1 of `outcomes' 	
 	
-	${qui} grc1leg `plots', rows(3) legendfrom(trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
+	grc1leg `plots', rows(3) legendfrom(trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
 		   graphregion(color(white)) title({bf: Outcome time trends}, color(black) size(small)) ///
 		   note("{it:Note:} Each figure shows the outcome variable for Houston (blue solid line), Synthetic""control (dashed line) and McIntosh control (red solid line) in the period 1994-2014.""The top figure shows the graph for the logarithm of weekly wages,""the figure in the middle shows it for employment and the bottom figure for inactivity.""The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
-	${qui} graph display, ysize(8.5) xsize(6.5)
-	${qui} graph export "${figures}alltrends_`city'mcintosh.png", replace
+	graph display, ysize(8.5) xsize(6.5)
+	graph export "${figures}alltrends_`city'mcintosh.png", replace
 	
   end	
 
@@ -103,7 +103,7 @@
   
 	syntax [if], outcomes(string) controls(string) city(string) tr_period(int) stub(string)
 
-	${qui} use "${work_asec}controltrends_`city'.dta", clear
+	use "${work_asec}controltrends_`city'.dta", clear
 
 	local number_outcomes: word count `outcomes'
 	
@@ -113,7 +113,7 @@
 		local vertical = `tr_period' - 1
 		local city_legend = proper("`city'")
 		
-		${qui} twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
+		twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
 			   (line synthetic_`city'_`outcome_var' year, lpattern(dash) lcolor(black)), xtitle("Year") ///
 			   ytitle("`stub_var'") xline(`vertical', lcolor(black) lpattern(dot)) ///
 			   legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
@@ -133,12 +133,12 @@
 	
 	local outcome1: word 1 of `outcomes' 	
 	
-	${qui} grc1leg `plots', rows(3) legendfrom(trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
+	grc1leg `plots', rows(3) legendfrom(trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
 		   graphregion(color(white)) title({bf: Outcome time trends}, color(black) size(small)) ///
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic""control (dashed line) in the period 1994-2014. The top figure shows the""graph for the logarithm of weekly wages, the figure in the middle shows it for""employment and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
-	${qui} graph display, ysize(8.5) xsize(6.5)
-	${qui} graph export "${figures}alltrends_`city'.png", replace
+	graph display, ysize(8.5) xsize(6.5)
+	graph export "${figures}alltrends_`city'.png", replace
 
   end	
   
@@ -150,7 +150,7 @@
 
 	syntax, outcomes(string) controls(string) city(string) tr_period(int) stub(string) level(string) title(string)
 
-	${qui} use "${work_asec}controltrends_`city'`level'.dta", clear
+	use "${work_asec}controltrends_`city'`level'.dta", clear
 
 	local number_outcomes: word count `outcomes'
 	forval i = 1/`number_outcomes' {
@@ -159,7 +159,7 @@
 		local vertical = `tr_period' - 1
 		local city_legend = proper("`city'")
 		
-		${qui} twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
+		twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
 			   (line synthetic_`city'_`outcome_var' year, lpattern(dash) lcolor(black)), ///
 			   ytitle("`stub_var'") xline(`vertical', lcolor(black) lpattern(dot)) ///
 			   xtitle("Year") legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
@@ -177,12 +177,12 @@
 	
 	local plot1: word 1 of `plots' 	
 	
-	${qui} grc1leg `plots', rows(3) legendfrom(`plot1') position(6) /// /* cols(1) or cols(3) */
+	grc1leg `plots', rows(3) legendfrom(`plot1') position(6) /// /* cols(1) or cols(3) */
 		   graphregion(color(white)) title({bf:`title' - Outcome time trends}, color(black) size(small)) ///
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic control (dashed line)"" in the period 1994-2014. The top figure shows the graph for the""logarithm of weekly wages, the figure in the middle shows it for employment and the bottom figure for""inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
-	${qui} graph display, ysize(8.5) xsize(6.5)
-	${qui} graph export "${figures}alltrends_`city'`level'.png", replace
+	graph display, ysize(8.5) xsize(6.5)
+	graph export "${figures}alltrends_`city'`level'.png", replace
 	
   end
 

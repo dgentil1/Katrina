@@ -52,6 +52,7 @@
  ///   a) Called by datafix                                                      ///
  ///      d_precleaning														     ///
  ///      d_idkatrina										 					 /// 
+ ///      d_descriptive										 					 /// 
  ///      d_endogeneity															 ///
  ///   b) Called by synth	                                                     ///
  ///      s_scm																     ///
@@ -63,7 +64,7 @@
  ///	 display all default stata output generated through the process.         ///
  ///                                                                             ///
  ///  This version:                                                              ///
- ///  May 2017. © D. Alimonti, M. Bosque Mercader, D. Gentile Passaro, 2017.     ///
+ ///  May 2017. @ D. Alimonti, M. Bosque Mercader, D. Gentile Passaro, 2017.     ///
  ///                                                                             ///
  ///////////////////////////////////////////////////////////////////////////////////
 
@@ -121,6 +122,7 @@
 		do "${datafix}Datafix_main.do"
 		do "${datafix}D_Precleaning.do"
 		do "${datafix}D_Idkatrina.do"
+		do "${datafix}D_Descriptive.do"
 		do "${datafix}D_Endogeneity.do"
 		
 		do "${mcintosh}McIntosh.do"
@@ -134,12 +136,6 @@
 	}
 
   **** Execute programs
-
-*	forvalues i=1/1 {
-*		cap log close Main_log
-*		log using "${logfiles}Main_log.smcl", replace name(Main_log)
-		
-		global qui "qui"  // Execute the programs silently
 		
 		datafix
 		
@@ -149,9 +145,4 @@
 		
 		did 
 		
-*		di " "
-*		di " "
-*		log close Main_log
-*	}
-
 ************************************************************************************

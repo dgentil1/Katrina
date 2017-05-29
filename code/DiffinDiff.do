@@ -6,7 +6,7 @@
   program define did
 
     foreach city in houston dallas fayetteville {
-		${qui} use "${work_asec}controltrends_`city'.dta", clear 
+		use "${work_asec}controltrends_`city'.dta", clear 
 		
 		local outcome_vars	= "lr_w_wage emplyd inactive"
 		local stub_list = "Log-wage Employment Inactivity"
@@ -30,7 +30,7 @@
 	    local education: word `i' of `education_levels'
 		
 		foreach city in houston dallas fayetteville {
-			${qui} use "${work_asec}controltrends_`city'_`education'.dta", clear 
+			use "${work_asec}controltrends_`city'_`education'.dta", clear 
 			
 			local outcome_vars	= "lr_w_wage emplyd inactive"
 			local stub_list = "Log-wage Employment Inactivity"
@@ -89,19 +89,19 @@
                (`outcome_var'0 `outcome_var'1)
 	}
 	
-    ${qui} reshape long  `outcomes', i(year) j(city)
+    reshape long  `outcomes', i(year) j(city)
 	
 	local label_city = proper("`city'")
     label define citylabel 0 "`label_city'"
 	label define citylabel 1 "Synthetic `label_city'", add
 	label values city citylabel
 
-	${qui} gen `city'=city==0
-	${qui} gen synth=city==1
+	gen `city'=city==0
+	gen synth=city==1
 
-	${qui} gen postkat = (year>=2006)
-	${qui} gen synth_sample= (`city'==1 | synth==1)
-	${qui} gen did_`city'=postkat*`city'
+	gen postkat = (year>=2006)
+	gen synth_sample= (`city'==1 | synth==1)
+	gen did_`city'=postkat*`city'
 	
 	label variable `city' "`label_city'"
 	label variable postkat "Post-Katrina"
@@ -119,9 +119,9 @@
 
 	eststo clear
 	
-	${qui} eststo: reg `var' `city' postkat did_`city' if synth_sample==1, r 
+	eststo: reg `var' `city' postkat did_`city' if synth_sample==1, r 
 	
-	${qui} esttab using "${tables}did_synth_`var'_`city'`educ_level'.tex", label se ar2 compress replace nonotes ///
+	esttab using "${tables}did_synth_`var'_`city'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(Diff in Diff for `stub'\label{tab1}) ///
 		   mtitles("Synthetic Control") ///
 		   addnote("{it:Note:} Robust standard errors in parentheses.")
@@ -137,24 +137,24 @@
     syntax, outcomes(string) stub(string) [educ_level(string) educ_stub(string)]
 	
 	foreach sample in treat control {
-		${qui} use "${work_asec}CPSASECfinal.dta", clear
+		use "${work_asec}CPSASECfinal.dta", clear
 
-		${qui} drop if kat_affected == 1
-		${qui} drop if evac == 1
+		drop if kat_affected == 1
+		drop if evac == 1
 		
 		if "`educ_level'" != "" {
-		    ${qui} keep if `educ_level' == 1
+		    keep if `educ_level' == 1
 		}
 			
-		${qui} collapse `outcomes' if `sample'==1 [aw=wtsupp], by(year) 
-		${qui} gen `sample' = 1
-		${qui} save "${temp}trend_`sample'`educ_level'.dta", replace 
+		collapse `outcomes' if `sample'==1 [aw=wtsupp], by(year) 
+		gen `sample' = 1
+		save "${temp}trend_`sample'`educ_level'.dta", replace 
 		cap saveold "${temp}trend_`sample'`educ_level'.dta", v(12) replace 
 	}
 	
-	${qui} append using "${temp}trend_treat`educ_level'.dta"
-	${qui} replace treat=0 if treat ==.
-	${qui} replace control=0 if control==.
+	append using "${temp}trend_treat`educ_level'.dta"
+	replace treat=0 if treat ==.
+	replace control=0 if control==.
 	
 	local number_outcomes: word count `outcomes'
 	
@@ -162,7 +162,7 @@
 		local var: word `i' of `outcomes'
 		local stub_var: word `i' of `stub'
 
-		${qui} twoway (line `var' year if treat == 1) ///
+		twoway (line `var' year if treat == 1) ///
 	           (line `var' year if control == 1), legend(label(1 "Treatment") label(2 "Control")) ///
 			   xtitle("Year") ytitle("`stub_var'") title("`stub_var'", color(black) size(medium)) graphregion(color(white)) bgcolor(white) name(check_`var'`educ_level', replace) ///
 			   xline(2005, lcolor(black) lpattern(dot)) xtitle("Year") ylabel(#3) ///
@@ -173,12 +173,12 @@
 	
 	local outcome1: word 1 of `outcomes' 	
 	
-	${qui} grc1leg `plots', rows(3) legendfrom(check_`outcome1'`educ_level') position(6) /// 
+	grc1leg `plots', rows(3) legendfrom(check_`outcome1'`educ_level') position(6) /// 
 		   graphregion(color(white)) title({bf:`educ_stub' Outcome time trends for treatment and control}, color(black) size(small)) ///
 		   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line)""and control group (red line) across time. The vertical line, representing the beginning of the""post-treatment period, is depicted for the year 2005. The top figure shows the graph for the logarithm of""weekly wages, the figure in the middle shows it for the employment and the bottom figure for inactivity.", size(vsmall)) ///
 		   caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
-	${qui} graph display, ysize(8.5) xsize(6.5)
-	${qui} graph export "${figures}checkslong`educ_level'.png", replace
+	graph display, ysize(8.5) xsize(6.5)
+	graph export "${figures}checkslong`educ_level'.png", replace
 
   end
 
@@ -190,18 +190,18 @@
 
     syntax, outcomes(string) controls(string) [educ_level(string) educ_stub(string)]
 
-	${qui} use "${work_asec}CPSASECfinal.dta", clear
+	use "${work_asec}CPSASECfinal.dta", clear
 
-	${qui} drop if kat_affected==1
-	${qui} drop if evac==1
+	drop if kat_affected==1
+	drop if evac==1
 	
 	label variable treat "Treatment"
 	
 	if "`educ_level'"!="" {
-	    ${qui} keep if `educ_level'==1
+	    keep if `educ_level'==1
 	} 
 
-	${qui} gen did_treat=postkat*treat
+	gen did_treat=postkat*treat
 	label variable postkat "Post"
 	label variable did_treat "Post x Treatment"
 	
@@ -211,11 +211,11 @@
 	
 	forval i = 1/`number_outcomes' {
 		local var: word `i' of `outcomes'
-		${qui} eststo: reg `var' treat postkat did_treat `controls' ///
+		eststo: reg `var' treat postkat did_treat `controls' ///
 			   if (treat ==1 | control==1) [aw=wtsupp], r cluster(metcode2) 
 	}
 
-	${qui} esttab using "${tables}diffindiff`educ_level'.tex", label se ar2 compress replace nonotes ///
+	esttab using "${tables}diffindiff`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`educ_stub' Differences in Differences for Treatment vs Control Group, CPS March ASEC Sample \label{tab5}) keep(treat postkat did_treat) ///
 		   mtitles("Log Wage" "Employment Rate" "Inactivity")   ///
 		   addnote("{Note:} Observations are weighted using CPS Supplement weights, robust standard errors in parentheses" "are clustered at the metropolitan area level. We include individual level covariates (age," "age-squared, sex,marital status, the interaction of sex and marital status, education, ethnicity, industry and occupation)." "We also use year and metropolitan area fixed effects." "Source: CPS March Supplement 1996 - 2014.")
