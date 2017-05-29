@@ -36,41 +36,41 @@
 
   program define s_scm_build
 	
-	${qui} syntax [if], outcomes(string) controls(string) city(string) tr_period(int) [stub(string)]
+	syntax [if], outcomes(string) controls(string) city(string) tr_period(int) [stub(string)]
     
-	${qui} use "${work_asec}CPSASECfinal.dta", clear
+	use "${work_asec}CPSASECfinal.dta", clear
 	
 	preserve
-		${qui} drop if kat_affected==1
-		${qui} drop if (control!=1 & `city'==0)
-		${qui} drop if katevac2==1
+		drop if kat_affected==1
+		drop if (control!=1 & `city'==0)
+		drop if katevac2==1
 
-		${qui} sum metcode2 if `city'==1
+		sum metcode2 if `city'==1
 		local trunit = r(mean)
 
-		${qui} collapse (mean) `controls' `outcomes' `city' kat_affected `if' [iw=wtsupp], by(year metcode2)
+		collapse (mean) `controls' `outcomes' `city' kat_affected `if' [iw=wtsupp], by(year metcode2)
 
-		${qui} xtset metcode2 year
+		xtset metcode2 year
 		local num_years = r(tmax) - r(tmin) + 1
-		${qui} bysort metcode2: gen num_year = _N
-		${qui} keep if num_year == `num_years' /* to balance the panel, otherwise the synthetic control does not apply */
+		bysort metcode2: gen num_year = _N
+		keep if num_year == `num_years' /* to balance the panel, otherwise the synthetic control does not apply */
 
 		local number_outcomes: word count `outcomes'
 		
 		forval i = 1/`number_outcomes' {
 			local outcome_var: word `i' of `outcomes' 
-			${qui} drop if `outcome_var'==.
+			drop if `outcome_var'==.
 		}
 		
-		${qui} bysort metcode2: replace num_year = _N
-		${qui} keep if num_year == `num_years' /* to balance the panel against missing values */
+		bysort metcode2: replace num_year = _N
+		keep if num_year == `num_years' /* to balance the panel against missing values */
 
-		${qui} save "${temp}donorpool_`city'`stub'.dta", replace
+		save "${temp}donorpool_`city'`stub'.dta", replace
 		cap saveold "${temp}donorpool_`city'`stub'.dta", v(12) replace
 
 		local number_outcomes: word count `outcomes'
 		forval i = 1/`number_outcomes' {
-			${qui} use "${temp}donorpool_`city'`stub'.dta", clear
+			use "${temp}donorpool_`city'`stub'.dta", clear
 			
 			local var: word `i' of `outcomes'
 			local lag1 = `tr_period' - 9
@@ -83,32 +83,32 @@
 			local lag8 = `tr_period' - 2
 			local lags = "`var'(`lag1') `var'(`lag2') `var'(`lag3') `var'(`lag4') `var'(`lag5') `var'(`lag6') `var'(`lag7') `var'(`lag8')"
 			
-			${qui} synth `var' `controls' `lags', ///
+			synth `var' `controls' `lags', ///
 				   trunit(`trunit') trperiod(`tr_period') figure ///
 				   keep("${temp}synth_`city'_`var'`stub'.dta", replace)
 
-			${qui} use "${temp}synth_`city'_`var'`stub'.dta", clear
+			use "${temp}synth_`city'_`var'`stub'.dta", clear
 			rename (_Co_Number _time _Y_treated _Y_synthetic) ///
 				   (metcode2 year `city'_`var' synthetic_`city'_`var')
 
-			${qui} drop if year==.
+			drop if year==.
 			drop metcode2 _W_Weight
 
-			${qui} save "${temp}synth_`city'_`var'`stub'.dta", replace
+			save "${temp}synth_`city'_`var'`stub'.dta", replace
 			cap saveold "${temp}synth_`city'_`var'`stub'.dta", v(12) replace
 		}
 
 		local number_outcomes: word count `outcomes'
 		local outcome_var: word 1 of `outcomes' 
-		${qui} use "${temp}synth_`city'_`outcome_var'`stub'", clear
+		use "${temp}synth_`city'_`outcome_var'`stub'", clear
 
 		forval i = 2/`number_outcomes' {
 			local outcome_var: word `i' of `outcomes' 
 
-			${qui} merge 1:1 year using "${temp}synth_`city'_`outcome_var'`stub'", nogen
+			merge 1:1 year using "${temp}synth_`city'_`outcome_var'`stub'", nogen
 		}
 		
-		${qui} save "${work_asec}controltrends_`city'`stub'.dta", replace
+		save "${work_asec}controltrends_`city'`stub'.dta", replace
 		cap saveold "${work_asec}controltrends_`city'`stub'.dta", v(12) replace	
 	restore
   

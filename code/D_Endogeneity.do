@@ -7,34 +7,34 @@
   
   ***** Create the distance to New Orleans dataset 
   	
-	${qui} import delimited "${layers}distance_matrix.csv", encoding(ISO-8859-1) clear
+	import delimited "${layers}distance_matrix.csv", encoding(ISO-8859-1) clear
 	
 	drop targetid
 	rename msa metarea   
-	${qui} drop if missing(metarea)
+	drop if missing(metarea)
 
-	${qui} tostring metarea, gen(metarea1)
-	${qui} destring metarea1, gen(metarea2)
+	tostring metarea, gen(metarea1)
+	destring metarea1, gen(metarea2)
 
-	${qui} gen metcode=substr(metarea1,1,1) if metarea2<100
-	${qui} replace metcode=substr(metarea1,1,2) if (metarea2>=100 & metarea2<1000)
-	${qui} replace metcode=substr(metarea1,1,3) if metarea2>=1000 
+	gen metcode=substr(metarea1,1,1) if metarea2<100
+	replace metcode=substr(metarea1,1,2) if (metarea2>=100 & metarea2<1000)
+	replace metcode=substr(metarea1,1,3) if metarea2>=1000 
 
-	${qui} destring metcode, gen(metcode2)
+	destring metcode, gen(metcode2)
 
-	${qui} collapse (mean) distance, by (metcode2)
+	collapse (mean) distance, by (metcode2)
 
-	${qui} save "${temp}distance_matrix.dta", replace
+	save "${temp}distance_matrix.dta", replace
 	cap saveold "${temp}distance_matrix.dta", v(12) replace
 
   ***** Merge
   
-	${qui} use "${work_asec}lot_evac_list_to_match.dta", clear
+	use "${work_asec}lot_evac_list_to_match.dta", clear
 
-	${qui} merge 1:1 metcode2 using "${temp}distance_matrix.dta", nogen
-	${qui} merge 1:1 metcode2 using "${work_asec}lot_evac_list.dta", nogen
+	merge 1:1 metcode2 using "${temp}distance_matrix.dta", nogen
+	merge 1:1 metcode2 using "${work_asec}lot_evac_list.dta", nogen
 
-	${qui} export delimited using "${layers}distance_matrix_matched.csv", replace
+	export delimited using "${layers}distance_matrix_matched.csv", replace
 
 	label var distance "Distance to New Orleans"
 	label var unem_1 "Average unemployment rate, last year"
@@ -48,10 +48,10 @@
 
 	eststo clear
 
-	${qui} eststo: reg share_evac distance unem_1 lr_w_wage_1
-	${qui} eststo: reg share_evac distance unem_5 lr_w_wage_5
+	eststo: reg share_evac distance unem_1 lr_w_wage_1
+	eststo: reg share_evac distance unem_5 lr_w_wage_5
 
-	${qui} esttab using "${tables}treatment_assignment.tex", r2 se nocons ///
+	esttab using "${tables}treatment_assignment.tex", r2 se nocons ///
 		   label compress replace title(Treatment assignment)
 		
   end
