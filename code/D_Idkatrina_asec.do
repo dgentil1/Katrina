@@ -105,11 +105,18 @@
 	sort metcode2 year
 	// Merging the new variables to the dataset
 	
- ***** Save the dataset
+ ***** Save the dataset for SCM
 
 	save "../derived_asec/CPSASECfinal.dta", replace
 	cap saveold "../derived_asec/CPSASECfinal.dta", v(12) replace
+
 	
+ ***** save the dataset for diff-in-diff	
+	keep if inlist(year,1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, ///
+		2008, 2009, 2010, 2011)
+	
+	save "../derived_asec/CPSASECfinal_did.dta", replace
+	cap saveold "../derived_asec/CPSASECfinal_did.dta", v(12) replace
   end
 
 ********************************************************************************  

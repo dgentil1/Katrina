@@ -94,21 +94,21 @@
 		do "D_Descriptive_asec.do"
 		do "D_Endogeneity_asec.do"
 
-		do "Synthetic_main.do"
-		do "S_SCM.do"
-		do "S_Pretrends.do"
-		do "S_Placebos.do"
+		do "Synthetic_main_asec.do"
+		do "S_SCM_asec.do"
+		do "S_Pretrends_asec.do"
+		do "S_Placebos_asec.do"
 		
-		do "DiffinDiff.do"
+		do "DiffinDiff_asec.do"
 	}
 
   **** Execute programs
 		
 		datafix_asec
 		
-		synth_control
+		synth_control_asec
 		
-		did 
+		did_asec
 		
 		*datafix_morg
 		
