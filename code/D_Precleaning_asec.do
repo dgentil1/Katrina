@@ -3,7 +3,7 @@
 
   ***** Define Program 
 
-  program define d_precleaning
+  program define d_precleaning_asec
 
 	* adopath + ../lib/stata/gslab_misc/ado
 

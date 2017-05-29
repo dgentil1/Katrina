@@ -3,7 +3,7 @@
 
  ***** Define Program 
 
-  program define d_idkatrina
+  program define d_idkatrina_asec
 
   use "../temp/CPSASEC.dta", clear
 

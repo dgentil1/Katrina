@@ -3,7 +3,7 @@
 
   ***** Define Program 
 
-  program define d_endogeneity
+  program define d_endogeneity_asec
   
   ***** Create the distance to New Orleans dataset 
   	

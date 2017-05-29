@@ -87,11 +87,12 @@
  
 	capture program drop _all
 	quietly {	
-		do "Datafix_main.do"
-		do "D_Precleaning.do"
-		do "D_Idkatrina.do"
-		do "D_Descriptive.do"
-		do "D_Endogeneity.do"
+		do "Datafix_main_asec.do"
+		do "D_Precleaning_asec.do"
+		do "D_Idkatrina_asec.do"
+		do "D_Get_treat_control_asec.do"
+		do "D_Descriptive_asec.do"
+		do "D_Endogeneity_asec.do"
 
 		do "Synthetic_main.do"
 		do "S_SCM.do"
@@ -103,10 +104,12 @@
 
   **** Execute programs
 		
-		datafix 
+		datafix_asec
 		
 		synth_control
 		
 		did 
+		
+		*datafix_morg
 		
 ************************************************************************************

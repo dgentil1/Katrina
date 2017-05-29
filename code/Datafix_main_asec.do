@@ -3,7 +3,7 @@
 
   ***** Define Program 
 
-  program define datafix
+  program define datafix_asec
 
   ***** Program starts
 
@@ -12,16 +12,19 @@
 	di "---------------------------------------------------------------------------"
 	
 	di "     Preparing the dataset ASEC (1994-2016)", as text
-	d_precleaning 
+	d_precleaning_asec
 	
 	di "     Identifying Katrina evacuees and affected areas", as text
-	d_idkatrina 
+	d_idkatrina_asec
+
+	di "     Getting treated and control list", as text
+	d_get_treat_control_asec
 	
 	di "     Descriptive statistics", as text
-	d_descriptive
+	d_descriptive_asec
 
 	di "     Controlling against endogeneity in relocation", as text
-	d_endogeneity 
+	d_endogeneity_asec
 	
   end
   

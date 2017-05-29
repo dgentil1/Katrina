@@ -3,7 +3,7 @@
 
  ***** Define Program 
 
-  program define d_descriptive
+  program define d_descriptive_asec
 	
  ***** Computing decriptives: evacuees vs nonevacuees
  
