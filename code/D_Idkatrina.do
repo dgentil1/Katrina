@@ -44,7 +44,6 @@
 		  			(count) obs = id [aw=wtsupp], by(metcode2)
 	sort share_evac
 	// Computing the share of evacuees
-	  // ASK DIEGO A FULL EXPLANATION
 	
 	local upper_threshold = 0.005
 	local lower_threshold = 0.0005
