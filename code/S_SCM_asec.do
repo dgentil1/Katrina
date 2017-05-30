@@ -3,7 +3,7 @@
 
   ***** Define Program 
 
-program s_scm
+program s_scm_asec
 
     local control_vars = "unem wksunem1 hours_worked poor " + ///
 		"sex white other black manuf bluecol whitecol " + ///
