@@ -96,7 +96,6 @@
 			keep years tr_effect_`i'
 			drop if missing(years)
 			save "../temp/synth_`var'`level'_`i'.dta", replace
-			cap saveold "../temp/synth_`var'`level'_`i'.dta", v(12) replace
 		}
 	}
 	
@@ -108,13 +107,11 @@
 	}
 		
 		save "../temp/allsynth_`var'_`city'`level'.dta", replace
-		cap saveold "../temp/allsynth_`var'_`city'`level'.dta", v(12) replace
 		
 		rename tr_effect_`trunit' `city'
 		keep year `city'
 		
 		save "../temp/`var'_`city'`level'.dta", replace
-		cap saveold "../temp/`var'_`city'`level'.dta", v(12) replace
 	}
 	
   end

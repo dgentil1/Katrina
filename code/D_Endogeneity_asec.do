@@ -25,7 +25,6 @@
 	collapse (mean) distance, by (metcode2)
 
 	save "../temp/distance_matrix.dta", replace
-	cap saveold "../temp/distance_matrix.dta", v(12) replace
 
   ***** Merge
   

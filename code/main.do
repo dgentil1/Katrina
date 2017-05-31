@@ -76,8 +76,8 @@
   ***** Paths
   
   *global code "Please insert here you working directory for project folder"
-  global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
-  *global code "/Users/marinabosque/Desktop/working_paper/code"
+  *global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
+  global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"
 	
    cd ${code}	
@@ -93,6 +93,11 @@
 		do "D_Get_treat_control_asec.do"
 		do "D_Descriptive_asec.do"
 		do "D_Endogeneity_asec.do"
+
+		do "Datafix_main_morg.do"
+		do "D_cpi_morg.do"
+		do "D_Precleaning_morg.do"
+		do "D_Idkatrina_morg.do"
 
 		do "Synthetic_main_asec.do"
 		do "S_SCM_asec.do"
@@ -110,6 +115,6 @@
 		
 		did_asec
 		
-		*datafix_morg
+		datafix_morg
 		
 ************************************************************************************

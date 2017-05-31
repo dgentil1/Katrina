@@ -3,10 +3,10 @@
 
  ***** Define Program 
 
-  program define d_idkatrina_asec
+  program define d_idkatrina_morg
 
-  use "../temp/CPSASEC.dta", clear
-
+  use "../temp/MORG.dta", clear
+  
  ***** Identifying Katrina affected areas 
 
 	gen kat_affected=0
@@ -15,11 +15,13 @@
 	// Katrina affected areas (kat_affected==1) and areas with large inflow of 
 	// evacuees to take out of the control group (kat_affected==0)
 	
-	gen evac = (katevac2 == 1)
+	gen evac = (purkat1 == 1)
 	// Katrina evacuees
 
  ***** Flagging treated cities and creating diff-in-diff variables
  
+ 	merge m:1 metcode2 using "../derived_asec/treat_and_control_list.dta", nogen keep(3)
+
 	gen houston = (metcode2==336)
 	gen dallas = (metcode2==192)
 	gen fayetteville = (metcode2==258)
@@ -31,7 +33,12 @@
 		
  ***** Save temporary dataset
 	
-	save "../temp/CPSASEC.dta", replace
+	save "../temp/MORG.dta", replace
+
+	
+	
+/* STILL TO BE CHECKED!	
+	
 	
 ***** Creating the GIS matchable MSA's list	and the share of evacuees in 2006
 
@@ -77,7 +84,7 @@
 	
  ***** Adding in-sample pre-treatment labor outcomes
 
-	use "../temp/CPSASEC.dta", clear
+	use "../temp/MORG.dta", clear
 
 	preserve
 		keep if year==2005
@@ -97,21 +104,21 @@
 	save "../derived_asec/lot_evac_list.dta", replace
 	// Creating the labor outcome variables for the 5-years before Katrina Hurricane
 	
-	merge 1:m metcode2 using "../temp/CPSASEC.dta", nogen
+	merge 1:m metcode2 using "../temp/MORG.dta", nogen
 	sort metcode2 year
 	// Merging the new variables to the dataset
 	
  ***** Save the dataset for SCM
 
-	save "../derived_asec/CPSASECfinal.dta", replace
+	save "../derived_asec/MORGfinal.dta", replace
 
 	
  ***** Save the dataset for diff-in-diff	
 	keep if inlist(year,1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, ///
 		2008, 2009, 2010, 2011)
 	
-	save "../derived_asec/CPSASECfinal_did.dta", replace
-	
+	save "../derived_asec/MORGfinal_did.dta", replace
+*/	
   end
 
 ********************************************************************************  

@@ -39,7 +39,7 @@
 	
 		gen mexican = (hispan>=100 & hispan<=109)	
 		gen nmhispan = (hispan!=0 & hispan!=100 & hispan!=102 ///
-			 				  & hispan!=103 & hispan!=104 & hispan!=108 & hispan!=109)	
+						& hispan!=103 & hispan!=104 & hispan!=108 & hispan!=109)	
 		gen black = (race==200 & mexican==0 & nmhispan==0)
 		gen white = (race==100 & mexican==0 & nmhispan==0)
 		gen other = (white!=1 & black!=1 & mexican!=1 & nmhispan!=1)
@@ -68,10 +68,7 @@
 		gen college = educ>=110
 		// Identifying education levels
 
-		gen educat = 1 if nohighsch==1
-		replace educat = 2 if highsch==1
-		replace educat = 3 if somecollege==1
-		replace educat = 4 if college==1
+		gen educat = 1*(nohighsch==1)+2*(highsch==1)+3*(somecollege==1)+4*(college==1)
 		// Generating education categories
 
 		label var nohighsch "High school dropout"
@@ -115,14 +112,13 @@
 		label var whitecol "White collar"
 		label var workcat "Work categories"
 
-		label define lblworkcat 1 "High school dropout" 2 "High school completed" ///
-							   3 "Some college completed" 4 "College completed"
+		label define lblworkcat 1 "Blue collar" 2 "White collar" 3 "Manufacturing"
 		label values workcat lblworkcat
-
+		
 	* Wages *
 	
 		gen hours_worked = ahrsworkt if ahrsworkt != 999
-		// Generating hours workerd
+		// Generating hours worked
 		
 		replace wkswork2=0*(wkswork2==0)+7*(wkswork2==1)+20*(wkswork2==2) ///
 							   +33*(wkswork2==3)+44*(wkswork2==4) ///
@@ -190,14 +186,12 @@
 	
 		gen id = _n
 		// Generate identifier for every observation
-		  // SORTED BY METAREA?
 
 		label var id "Individual identifier"
 		
-	* saving dataset
+	* Saving the dataset
 	
 	save "../temp/CPSASEC.dta", replace
-	cap saveold "../temp/CPSASEC.dta", v(12) replace
 
   end
 
