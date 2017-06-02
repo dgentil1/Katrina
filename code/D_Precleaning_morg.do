@@ -20,7 +20,7 @@
 
 	keep age cbsafips earnhre earnwke earnwt earnwtp ethnic grade92 hhid hhnum ///
 		 hrhtype hrhhid2 hrsample ind02 ind80 lfsr94 purkat1 purkat2 race sex ///
-		 uhourse weight weightp year msafips occ80 occ00 occ2011 occ2012  
+		 uhourse weight weightp year msafips occ80 occ00 occ2011 occ2012 penatvty
 
   ***** Adding CPI base 99 index (source FED data)
 	
@@ -67,6 +67,10 @@
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
 
+	* Native *
+		
+		gen native=1*(penatvty<100)
+		
 	* Education status *
 	
 		gen nohighsch = grade92<38

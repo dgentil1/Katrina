@@ -60,10 +60,10 @@
 		label define lblethnic 1 "Mexican" 2 "Non-Mexican, Hispanic" ///
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
-	
+
 	* Native * 
 	
-	gen native=1*(bpl<15000)
+		gen native=1*(bpl<15000)
 	
 	* Education status *
 	
