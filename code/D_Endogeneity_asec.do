@@ -40,8 +40,8 @@
 	label var unem_5 "Average unemployment rate, last 5 years"
 	label var lr_w_wage_1 "Average log-weekly wage, last year"
 	label var lr_w_wage_5 "Average log-weekly wage, last 5 years"
-	label var hourwage_1 "Average hourly wage, last year"
-	label var hourwage_5 "Average hourly wage, last 5 years"
+	label var lr_h_wage_1 "Average hourly wage, last year"
+	label var lr_h_wage_5 "Average hourly wage, last 5 years"
 	label var share_evac "Evacuees share"
 	label var treat "Treatment"
 

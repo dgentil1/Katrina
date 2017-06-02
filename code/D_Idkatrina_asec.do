@@ -32,9 +32,8 @@
  ***** Save temporary dataset
 	
 	save "../temp/CPSASEC.dta", replace
-	cap saveold "../temp/CPSASEC.dta", v(12) replace
 	
-***** Creating the GIS matchable MSA's list	and the share of evacuees in 2006
+ ***** Creating the GIS matchable MSA's list	and the share of evacuees in 2006
 
 	keep if year == 2006
 	bysort metcode2: gen num_obs=_N
@@ -48,7 +47,6 @@
 	// Computing the share of evacuees
 
 	save "../derived_asec/lot_evac_list_to_match.dta", replace
-	cap saveold "../derived_asec/lot_evac_list_to_match.dta", v(12) replace
 
 	local upper_thresholds  "5 1"
 	local significance_10 = 1.285
@@ -76,7 +74,6 @@
 	// that received an inflow of evacuees that is not statistically significant
 	
 	save "../derived_asec/lot_evac_list.dta", replace
-	cap saveold "../derived_asec/lot_evac_list.dta", v(12) replace
 	
  ***** Adding in-sample pre-treatment labor outcomes
 
@@ -84,7 +81,7 @@
 
 	preserve
 		keep if year==2005
-		collapse (mean) lr_w_wage_1 = lr_w_wage hourwage_1 = hourwage unem_1 = unem [aw=wtsupp], by(metcode2)
+		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [aw=wtsupp], by(metcode2)
 
 		merge 1:1 metcode2 using "../derived_asec/lot_evac_list.dta", nogen
 
@@ -93,12 +90,11 @@
 	// Creating the labor outcome variables for the year before Katrina Hurricane
 	
 	keep if (year==2001 | year==2002 | year==2003 | year==2004 | year==2005)
-	collapse (mean) lr_w_wage_5 = lr_w_wage hourwage_5 = hourwage unem_5 = unem [aw=wtsupp], by(metcode2)
+	collapse (mean) lr_w_wage_5 = lr_w_wage lr_h_wage_5 = lr_h_wage unem_5 = unem [aw=wtsupp], by(metcode2)
 
 	merge 1:1 metcode2 using "../derived_asec/lot_evac_list.dta", nogen
 
 	save "../derived_asec/lot_evac_list.dta", replace
-	cap saveold "../derived_asec/lot_evac_list.dta", v(12) replace 
 	// Creating the labor outcome variables for the 5-years before Katrina Hurricane
 	
 	merge 1:m metcode2 using "../temp/CPSASEC.dta", nogen
@@ -108,15 +104,15 @@
  ***** Save the dataset for SCM
 
 	save "../derived_asec/CPSASECfinal.dta", replace
-	cap saveold "../derived_asec/CPSASECfinal.dta", v(12) replace
 
 	
- ***** save the dataset for diff-in-diff	
+ ***** Save the dataset for diff-in-diff	
+ 
 	keep if inlist(year,1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, ///
 		2008, 2009, 2010, 2011)
 	
 	save "../derived_asec/CPSASECfinal_did.dta", replace
-	cap saveold "../derived_asec/CPSASECfinal_did.dta", v(12) replace
+	
   end
 
 ********************************************************************************  

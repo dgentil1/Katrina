@@ -25,7 +25,10 @@
 
 	di "     Controlling against endogeneity in relocation", as text
 	d_endogeneity_asec
-	
+
+	di "     Household shares", as text
+	d_hhshares_asec
+
   end
   
 ********************************************************************************  

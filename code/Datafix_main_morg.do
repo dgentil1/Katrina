@@ -18,7 +18,7 @@
 	d_precleaning_morg
 
 	di "     Identifying Katrina Evacuees", as text
-	*d_idkatrina_morg
+	d_idkatrina_morg
 
 	
   end

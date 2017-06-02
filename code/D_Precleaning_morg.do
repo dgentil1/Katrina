@@ -20,7 +20,7 @@
 
 	keep age cbsafips earnhre earnwke earnwt earnwtp ethnic grade92 hhid hhnum ///
 		 hrhtype hrhhid2 hrsample ind02 ind80 lfsr94 purkat1 purkat2 race sex ///
-		 uhourse weight weightp year msafips 
+		 uhourse weight weightp year msafips occ80 occ00 occ2011 occ2012  
 
   ***** Adding CPI base 99 index (source FED data)
 	
@@ -47,8 +47,8 @@
 	
 		gen white = (race==1 & ethnic==8) | (race==1 & ethnic==9) | (race==1 & ethnic==.)
 		gen black = (race==2 & ethnic==8) | (race==2 & ethnic==9) | (race==2 & ethnic==.)
-		gen mexican = (ethnic==3)
-		gen nmhispan = (ethnic!=8 & ethnic!=9 & ethnic!=3 & race!=1 & race!=2)
+		gen mexican = (ethnic==3) | (ethnic==1)
+		gen nmhispan = (ethnic!=8 & ethnic!=9 & ethnic!=3 & ethnic!=1)
 		gen other = (white==0 & black==0 & mexican==0 & nmhispan==0)
 		// Identifying race
 		
@@ -99,26 +99,93 @@
 		label var inactive "Inactive"
 		label var emplyd "Employment"
 		label var unem "Unemployment"
-		
-		gen bluecol=.
+	
+	* Industry *
+	
+		gen bluecol=0
+		replace bluecol=. if ind80==. | ind02==.
 		replace bluecol=1 if (ind80>=10 & ind80<=691) | (ind02>=170 & ind02<=6780)
-		replace bluecol=0 if bluecol==.
 		
-		gen whitecol=.
+		gen whitecol=0
+		replace whitecol=. if (ind80==. | ind02==.)		
 		replace whitecol=1 if (ind80>=700 & ind80<=932) | (ind02>=6870 & ind02<=9590)
-		replace whitecol=0 if whitecol==.		
-		// Identifying white collars, blue collars and manufacturing
+		// Identifying white collars and blue collars
 		
 		gen workcat=1*(bluecol==1)+2*(whitecol==1)
+		replace workcat=. if (bluecol==.&whitecol==.)
 		// Generating working categories
 	
-		label var bluecol "Blue collar"
-		label var whitecol "White collar"
+		label var bluecol "Blue-collar"
+		label var whitecol "White-collar"
 		label var workcat "Work categories"
 
-		label define lblworkcat 1 "Blue collar" 2 "White collar" 
+		label define lblworkcat 0 "Armed Forces" 1 "Blue-collar" 2 "White-collar" 
 		label values workcat lblworkcat
+	
+	* Occupation *
+		
+		gen kindocc = .
+		 
+		* Years from 1996 to 1999
+		replace kindocc=. if occ80==. & (year>=1996&year<2000)
+		replace kindocc=0 if (occ80>=3&occ80<=199) & (year>=1996&year<2000)
+		replace kindocc=300 if (occ80>=203&occ80<=389) & (year>=1996&year<2000)
+		replace kindocc=500 if (occ80>=503&occ80<=699) & (year>=1996&year<2000)
+		replace kindocc=600 if (occ80>=703&occ80<=889) & (year>=1996&year<2000)
+		replace kindocc=700 if (occ80>=403&occ80<=469) & (year>=1996&year<2000)
+		replace kindocc=810 if (occ80>=473&occ80<=499) & (year>=1996&year<2000)
+		replace kindocc=999 if (occ80>=900|occ80==0) & (year>=1996&year<2000)
+		replace kindocc=. if occ80==. & (year>=1996&year<2000)		
+		 
 
+		* Years from 2000 to 2010
+		replace occ00=occ00/10 if occ00>=0 & (year>=2000)
+		
+		replace kindocc=0 if (occ00>=1&occ00<=359) & (year>=2000 & year<2011) 
+		replace kindocc=300 if (occ00>=500&occ00<=599) & (year>=2000 & year<2011)
+		replace kindocc=400 if (occ00>=470&occ00<=499) & (year>=2000 & year<2011)
+		replace kindocc=500 if (occ00>=612&occ00<=983) & (year>=2000 & year<2011)
+		replace kindocc=700 if (occ00>=360&occ00<=469) & (year>=2000 & year<2011)
+		replace kindocc=810 if (occ00>=600&occ00<=611) & (year>=2000 & year<2011)
+		replace kindocc=999 if (occ00==0|occ00>=984) & (year>=2000 & year<2011)
+		replace kindocc=. if occ00==. & (year>=2000 & year<2011)		
+
+		* Years 2011
+		replace occ2011=occ2011/10 if occ2011>=0 & (year>=2011 & year<2012)
+		
+		replace kindocc=0 if (occ2011>=1&occ2011<=359) & (year>=2011 & year<2012) 
+		replace kindocc=300 if (occ2011>=500&occ2011<=599) & (year>=2011 & year<2012)
+		replace kindocc=400 if (occ2011>=470&occ2011<=499) & (year>=2011 & year<2012)
+		replace kindocc=500 if (occ2011>=612&occ2011<=983) & (year>=2011 & year<2012)
+		replace kindocc=700 if (occ2011>=360&occ2011<=469) & (year>=2011 & year<2012)
+		replace kindocc=810 if (occ2011>=600&occ2011<=611) & (year>=2011 & year<2012)
+		replace kindocc=999 if (occ2011==0|occ2011>=984) & (year>=2011 & year<2012)
+		replace kindocc=. if occ2011==. & (year>=2011 & year<2012)		
+
+		* Years from 2012 to 2014		
+		replace occ2012=occ2012/10 if occ2012>=0 & (year>=2012)
+		
+		replace kindocc=0 if (occ2012>=1&occ2012<=359) & (year>=2012) 
+		replace kindocc=300 if (occ2012>=500&occ2012<=599) & (year>=2012)
+		replace kindocc=400 if (occ2012>=470&occ2012<=499) & (year>=2012)
+		replace kindocc=500 if (occ2012>=612&occ2012<=983) & (year>=2012)
+		replace kindocc=700 if (occ2012>=360&occ2012<=469) & (year>=2012)
+		replace kindocc=810 if (occ2012>=600&occ2012<=611) & (year>=2012)
+		replace kindocc=999 if (occ2012==0|occ2012>=984) & (year>=2012)
+		replace kindocc=. if occ2012==. & (year>=2012)		
+		 
+		label variable kindocc "Occupation"
+
+		gen collarocc=3 if kindocc>980
+		replace collarocc=2 if kindocc>=500 & kindocc<=980
+		replace collarocc=1 if kindocc>=0 & kindocc<=499
+		
+		label variable collarocc "Type of Job"
+		label define collarocclbl 1 "White-collar", add 
+		label define collarocclbl 2 "Blue-collar", add
+		label define collarocclbl 3 "Unemployed or Armed Forces", add
+		label values collarocc collarocclbl
+	
 	* Wages *
 	
 		gen hours_worked = uhourse

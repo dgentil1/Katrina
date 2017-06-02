@@ -93,6 +93,7 @@
 		do "D_Get_treat_control_asec.do"
 		do "D_Descriptive_asec.do"
 		do "D_Endogeneity_asec.do"
+		do "D_Household_asec.do"
 
 		do "Datafix_main_morg.do"
 		do "D_cpi_morg.do"
