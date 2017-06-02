@@ -17,7 +17,7 @@
 	keep year serial hwtsupp metarea hhincome cpi99 month pernum wtsupp age sex race     ///
 		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage incwage ///
 		 offpov katevac katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
-		 occ
+		 occ bpl
 	
  ***** Dropping/Adjusting variables 
 
@@ -60,7 +60,11 @@
 		label define lblethnic 1 "Mexican" 2 "Non-Mexican, Hispanic" ///
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
-
+	
+	* Native * 
+	
+	gen native=1*(bpl<15000)
+	
 	* Education status *
 	
 		gen nohighsch = educ<70 
