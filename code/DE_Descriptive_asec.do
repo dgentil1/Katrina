@@ -5,7 +5,7 @@
 
   program define de_descriptive_asec
 	
- ***** Computing decriptives: evacuees vs nonevacuees
+ ***** Computing descriptives: demographic characteristics evacuees vs nonevacuees
  
  	use "../temp/CPSASEC.dta", clear
  
@@ -30,12 +30,11 @@
 
 	mkmat evac_mean nevac_mean diff_mean se_diff_mean, matrix(output)
 
-	mat2txt, matrix(output) saving("../tables/descriptive_evac_vs_nevac.txt") replace ///
-		  	 format(%20.5f) title(<tab:descriptive>)
-	// Computing decriptives: evacuees vs nonevacuees
+	mat2txt, matrix(output) saving("../tables/descriptive_evac_vs_nevac_asec.txt") replace ///
+		  	 format(%20.5f) title(<tab:descriptive_asec>)
 	
 
- ***** Computing decriptives: labor status of evacuees
+ ***** Computing descriptives: labor status of treatment group, control group, and evacuees
 	
 	use "../derived_asec/CPSASECfinal.dta", clear
 	
@@ -58,7 +57,7 @@
 	matrix output = (output\r(StatTotal))
 
 	mat2txt, matrix(output) saving("../tables/labor_status_sample.txt") replace ///
-		  	 format(%20.5f) title(<tab:labor_status_sample>)
+		  	 format(%20.5f) title(<tab:labor_status_sample_asec>)
 	
   end
 

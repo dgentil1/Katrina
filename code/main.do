@@ -13,9 +13,7 @@
  ///  HOW TO USE: The following are the main instructions to use this program.   ///
  ///                                                                             ///
  ///  1) Set the relevant paths in your computer. You need to provide:		 	 ///
- ///	project           -> folder where all the other folders are stored         ///
- ///										 									 ///
- ///	code     	      -> subfolder containing all dofiles		 ///
+ ///	code     	      -> working directory for code folder					 ///
  ///																			 ///
  ///	raw     	      -> subfolder where data sets are stored              	 ///
  ///     	      		 
@@ -75,7 +73,7 @@
 
   ***** Paths
   
-  *global code "Please insert here you working directory for project folder"
+  *global code "Please insert here you working directory for code folder"
   *global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
   global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"

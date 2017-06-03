@@ -15,7 +15,7 @@
 	de_descriptive_asec
 
 	di "     Descriptive statistics (MORG)", as text
-	*de_descriptive_morg
+	de_descriptive_morg
 
 	di "     Descriptive statistics (ASEC-MORG)", as text
 	*de_descriptive_asecmorg
