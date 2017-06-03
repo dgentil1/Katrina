@@ -1,5 +1,5 @@
  
- *------------------------ Building placebo tests -----------------------------*
+ *-------------------- Building placebo tests (ASEC) -------------------------*
 
   ***** Define Program 
 

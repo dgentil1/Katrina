@@ -1,5 +1,5 @@
  
- *----- Geographical distance/Labor Market Outcomes on evacuees decision ------*
+ *----------- Controlling against endogeneity in relocation (ASEC) -----------*
 
   ***** Define Program 
 

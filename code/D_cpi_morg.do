@@ -1,5 +1,5 @@
 
- *--------------------- Creating the CPI for MORG data ------------------------*
+ *------------------------- Creating CPI for MORG ----------------------------*
 
   ***** Define Program 
 

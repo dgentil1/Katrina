@@ -1,5 +1,5 @@
  
- *------------------------ Difference-in-Differences --------------------------*
+ *-------------------- Difference-in-Differences (ASEC) ----------------------*
 
   ***** Define Program 
 

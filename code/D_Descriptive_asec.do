@@ -1,5 +1,5 @@
  
- *-------------------------- Descriptive statistics ---------------------------*
+ *---------------------- Descriptive statistics (ASEC) -----------------------*
 
  ***** Define Program 
 

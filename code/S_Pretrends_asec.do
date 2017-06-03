@@ -1,5 +1,5 @@
  
- *------------------------ Constructing pre-trends ----------------------------*
+ *-------- Constructing pre-trends of the outcome variables (ASEC) -----------*
 
   ***** Define Program 
 

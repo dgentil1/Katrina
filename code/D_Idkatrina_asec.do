@@ -1,5 +1,5 @@
  
- *----------------------- Identifying Katrina Evacuees ------------------------*
+ *---------- Identifying Katrina evacuees and affected areas (ASEC) -----------*
 
  ***** Define Program 
 
@@ -33,7 +33,7 @@
 	
 	save "../temp/CPSASEC.dta", replace
 	
- ***** Creating the GIS matchable MSA's list	and the share of evacuees in 2006
+ ***** Creating the GIS matchable MSA's list and the share of evacuees in 2006
 
 	keep if year == 2006
 	bysort metcode2: gen num_obs=_N

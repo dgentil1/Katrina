@@ -1,5 +1,5 @@
 
- *---------------------- Getting treatment and control list -------------------*
+ *------------------- Getting treated and control list (ASEC) ----------------*
 
   ***** Define Program 
   

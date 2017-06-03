@@ -1,5 +1,5 @@
  
- *------------------------- Synthetic Control Method --------------------------*
+ *----------------- Building Synthetic Control Method (ASEC) -----------------*
 
   ***** Define Program 
 

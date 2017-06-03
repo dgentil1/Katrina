@@ -1,5 +1,5 @@
  
- *----------------------- Household shares ------------------------*
+ *------------------------- Household shares (ASEC) --------------------------*
 
  ***** Define Program 
 
@@ -24,7 +24,7 @@
 	replace hh_evac=0 if _merge==1
 	drop _merge
 		
-  ***** (1) Share of evacuees among households with evacuees
+ ***** (1) Share of evacuees among households with evacuees
 	
 	* Creating the share (share_evac_hh)
 		
@@ -39,7 +39,7 @@
 
 	merge m:1 serial using "../temp/share_hh.dta", nogen keepusing(share_evac_hh)
 
-  ***** (2) Share of people with the same race as the evacuee among households with evacuees
+ ***** (2) Share of people with the same race as the evacuee among households with evacuees
 		
 	preserve
 		bysort serial: egen av_evac = mean(evac) 
@@ -79,7 +79,7 @@
 
 	merge m:1 serial using "../temp/share_evac_hhrace.dta", nogen keepusing(share_evac_hhrace)
 	
-  ***** (3) Share of evacuees that are not head of households
+ ***** (3) Share of evacuees that are not head of households
   
 	* Creating the share (share_evac_nothead)
   
@@ -96,8 +96,8 @@
 	
 	merge m:1 serial using "../temp/share_evac_nothead.dta", nogen keepusing(share_evac_nothead)
 		
-  ***** (4) Share of non-evacuees that are head of households, in households with evacuees that
-  *****	were living in the current location in the last year
+ ***** (4) Share of non-evacuees that are head of households, in households with evacuees that
+ *****	were living in the current location in the last year
   
 	gen ind_sameplace = 1*(hh_evac==1 & migrate1==1)
 	// Flagging households with at least one evacuee living in the same location of last year
@@ -117,11 +117,11 @@
 	
 	merge m:1 serial using "../temp/share_nonevac_head.dta", nogen keepusing(share_nonevac_head)
 	
-*------------------------------------------------------------------------------------------------------*
 
-  ***** Save the dataset
+ ***** Save the dataset
   
 	save "../temp/CPSASEC_hh.dta", replace
 	
   end  
 
+********************************************************************************

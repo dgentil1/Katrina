@@ -99,16 +99,26 @@
 		do "D_cpi_morg.do"
 		do "D_Precleaning_morg.do"
 		do "D_Idkatrina_morg.do"
+		do "D_Get_treat_control_morg.do"
 
 		do "Synthetic_main_asec.do"
 		do "S_SCM_asec.do"
 		do "S_Pretrends_asec.do"
 		do "S_Placebos_asec.do"
+
+		*do "Synthetic_main_morg.do"
+		*do "S_SCM_morg.do"
+		*do "S_Pretrends_morg.do"
+		*do "S_Placebos_morg.do"
 		
 		do "DiffinDiff_asec.do"
+		
+		*do "DiffinDiff_morg.do"
 	}
 
   **** Execute programs
+  
+	*** ASEC
 		
 		datafix_asec
 		
@@ -116,6 +126,13 @@
 		
 		did_asec
 		
+	*** MORG
+		
 		datafix_morg
+		
+		*synth_control_morg
+		
+		*did_morg
+
 		
 ************************************************************************************
