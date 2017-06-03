@@ -82,7 +82,7 @@
 
 	preserve
 		keep if year==2005
-		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [aw=wtsupp], by(metcode2)
+		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [aw=weight], by(metcode2)
 
 		merge 1:1 metcode2 using "../derived_morg/lot_evac_list.dta", nogen
 
@@ -91,7 +91,7 @@
 	// Creating the labor outcome variables for the year before Katrina Hurricane
 	
 	keep if (year==2001 | year==2002 | year==2003 | year==2004 | year==2005)
-	collapse (mean) lr_w_wage_5 = lr_w_wage lr_h_wage_5 = lr_h_wage unem_5 = unem [aw=wtsupp], by(metcode2)
+	collapse (mean) lr_w_wage_5 = lr_w_wage lr_h_wage_5 = lr_h_wage unem_5 = unem [aw=weight], by(metcode2)
 
 	merge 1:1 metcode2 using "../derived_morg/lot_evac_list.dta", nogen
 
