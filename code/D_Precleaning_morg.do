@@ -232,7 +232,7 @@
 		destring metcode, gen(metcode2)
 		label var metcode2 "Metropolitan Area"
 		
-		drop metarea1 metarea2 metcode
+		drop metarea metarea1 metarea2 metcode
 
 		* We drop observations out of metropolitan areas or in unidentified ones *
 		drop if missing(metcode2)
