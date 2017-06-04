@@ -1,5 +1,5 @@
  
- *----------------------------- Preparing Dataset -----------------------------*
+ *--------------------- Preparing ASEC Dataset (1996-2016)---------------------*
 
   ***** Define Program 
 
@@ -14,9 +14,10 @@
 	
  ***** Keeping needed variables
 
-	keep year serial hwtsupp metarea hhincome cpi99 month pernum wtsupp age sex race ///
-		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage  	 ///
-		 incwage offpov katevac katevac2 katprior wksunem1 marst occ2010
+	keep year serial hwtsupp metarea hhincome cpi99 month pernum wtsupp age sex race     ///
+		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage incwage ///
+		 offpov katevac katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
+		 occ bpl
 	
  ***** Dropping/Adjusting variables 
 
@@ -39,7 +40,7 @@
 	
 		gen mexican = (hispan>=100 & hispan<=109)	
 		gen nmhispan = (hispan!=0 & hispan!=100 & hispan!=102 ///
-			 				  & hispan!=103 & hispan!=104 & hispan!=108 & hispan!=109)	
+						& hispan!=103 & hispan!=104 & hispan!=108 & hispan!=109)	
 		gen black = (race==200 & mexican==0 & nmhispan==0)
 		gen white = (race==100 & mexican==0 & nmhispan==0)
 		gen other = (white!=1 & black!=1 & mexican!=1 & nmhispan!=1)
@@ -60,6 +61,10 @@
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
 
+	* Native * 
+	
+		gen native=1*(bpl<15000)
+	
 	* Education status *
 	
 		gen nohighsch = educ<70 
@@ -68,10 +73,7 @@
 		gen college = educ>=110
 		// Identifying education levels
 
-		gen educat = 1 if nohighsch==1
-		replace educat = 2 if highsch==1
-		replace educat = 3 if somecollege==1
-		replace educat = 4 if college==1
+		gen educat = 1*(nohighsch==1)+2*(highsch==1)+3*(somecollege==1)+4*(college==1)
 		// Generating education categories
 
 		label var nohighsch "High school dropout"
@@ -95,38 +97,73 @@
 		label var inactive "Inactive"
 		label var emplyd "Employment"
 		label var unem "Unemployment"
-		  	
-		gen manuf=.
-		replace manuf=1 if (ind1950>300 & ind1950<500)
-		replace manuf=0 if (manuf==. & ind1950!=0)
-		gen bluecol=.
-		replace bluecol=1 if (ind1950!=0 & ind1950<500)
-		replace bluecol=0 if (bluecol==. & ind1950!=0)
-		gen whitecol=.
-		replace whitecol=1 if ind1950>700
-		replace whitecol=0 if (whitecol==. & ind1950!=0)
-		// Identifying white collars, blue collars and manufacturing
+	
+	* Industry *
+	
+		gen bluecol=0
+		replace bluecol=. if (ind1950==0 |ind1950==997 |ind1950==998)
+		replace bluecol=1 if (ind1950>=105 & ind1950<=699)
+
+		gen whitecol=0
+		replace whitecol=. if (ind1950==0 |ind1950==997 |ind1950==998)
+		replace whitecol=1 if (ind1950>=716 & ind1950<=936)
+		// Identifying white collars and blue collars
 		
-		gen workcat=1*(manuf==1)+2*(bluecol==1)+3*(whitecol==1)
+		gen workcat=1*(bluecol==1)+2*(whitecol==1)
+		replace workcat=. if (bluecol==.&whitecol==.)
 		// Generating working categories
 	
-		label var manuf "Manufacturing"
-		label var bluecol "Blue collar"
-		label var whitecol "White collar"
+		label var bluecol "Blue-collar"
+		label var whitecol "White-collar"
 		label var workcat "Work categories"
 
-		label define lblworkcat 1 "High school dropout" 2 "High school completed" ///
-							   3 "Some college completed" 4 "College completed"
+		label define lblworkcat 0 "Armed Forces" 1 "Blue-collar" 2 "White-collar"
 		label values workcat lblworkcat
+	
+	* Occupation *
 
+		gen kindocc = .
+
+		* Years from 1996 to 2002
+		replace kindocc=0 if (occ>=3&occ<=199) & (year>=1996&year<=2002)
+		replace kindocc=300 if (occ>=203&occ<=389) & (year>=1996&year<=2002)
+		replace kindocc=500 if (occ>=503&occ<=699) & (year>=1996&year<=2002)
+		replace kindocc=600 if (occ>=703&occ<=889) & (year>=1996&year<=2002)
+		replace kindocc=700 if (occ>=403&occ<=469) & (year>=1996&year<=2002)
+		replace kindocc=810 if (occ>=473&occ<=499) & (year>=1996&year<=2002)
+		replace kindocc=999 if (occ>=900|occ==0) & (year>=1996&year<=2002)
+
+		* Years from 2003 to 2014
+		replace occ=occ/10 if occ>=0 & year>=2003
+		
+		replace kindocc=0 if (occ>=1&occ<=359) & year>=2003 
+		replace kindocc=300 if (occ>=500&occ<=599) & year>=2003
+		replace kindocc=400 if (occ>=470&occ<=499) & year>=2003
+		replace kindocc=500 if (occ>=612&occ<=983) & year>=2003
+		replace kindocc=700 if (occ>=360&occ<=469) & year>=2003
+		replace kindocc=810 if (occ>=600&occ<=611) & year>=2003
+		replace kindocc=999 if (occ==0|occ>=984) & year>=2003
+		
+		label variable kindocc "Occupation"
+
+		gen collarocc=3 if kindocc>980
+		replace collarocc=2 if kindocc>=500 & kindocc<=980
+		replace collarocc=1 if kindocc>=0 & kindocc<=499
+		
+		label variable collarocc "Type of Job"
+		label define collarocclbl 1 "White-collar", add 
+		label define collarocclbl 2 "Blue-collar", add
+		label define collarocclbl 3 "Unemployed or Armed Forces", add
+		label values collarocc collarocclbl
+	
 	* Wages *
 	
 		gen hours_worked = ahrsworkt if ahrsworkt != 999
-		// Generating hours workerd
+		// Generating hours worked last week
 		
 		replace wkswork2=0*(wkswork2==0)+7*(wkswork2==1)+20*(wkswork2==2) ///
-							   +33*(wkswork2==3)+44*(wkswork2==4) ///
-							   +48.5*(wkswork2==5)+51*(wkswork2==6)
+						 +33*(wkswork2==3)+44*(wkswork2==4) ///
+						 +48.5*(wkswork2==5)+51*(wkswork2==6)
 		replace wkswork1=wkswork2 if (wkswork1==. & wkswork2!=.)
 		drop wkswork2
 		// Extrapolating the weeks worked bins
@@ -134,25 +171,25 @@
 		  // We replace each interval with its average weeks worked for that interval
 		
 		gen w_wage=incwage/wkswork1
-		rename incwage y_wage 
+		gen h_wage=w_wage/hours_worked
 		// Generating yearly and weekly income wages
 		
 		gen r_w_wage=w_wage*cpi99
-		gen r_y_wage=y_wage*cpi99
+		gen r_h_wage=h_wage*cpi99
 		// Deflating income variables
 		
 		gen lr_w_wage=ln(r_w_wage)
-		gen lr_y_wage=ln(r_y_wage)
+		gen lr_h_wage=ln(r_h_wage)
 		// Generating logarithm of yearly and weekly wages
 	
 		label var hours_worked "Hours worked last week"
 		label var wkswork1 "Weeks worked last year"
 		label var w_wage "Weekly wage"
-		label var y_wage "Yearly wage"
+		label var h_wage "Hourly wage"
 		label var r_w_wage "Real weekly wage"
-		label var r_y_wage "Real yearly wage"
+		label var r_h_wage "Real hourly wage"
 		label var lr_w_wage "Logarithm real weekly wage"
-		label var lr_y_wage "Logarithm real yearly wage"
+		label var lr_h_wage "Logarithm real hourly wage"
 		
 	* Poverty status *
 
@@ -190,14 +227,12 @@
 	
 		gen id = _n
 		// Generate identifier for every observation
-		  // SORTED BY METAREA?
 
 		label var id "Individual identifier"
 		
-	* saving dataset
+	* Saving the dataset
 	
 	save "../temp/CPSASEC.dta", replace
-	cap saveold "../temp/CPSASEC.dta", v(12) replace
 
   end
 

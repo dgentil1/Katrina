@@ -13,9 +13,7 @@
  ///  HOW TO USE: The following are the main instructions to use this program.   ///
  ///                                                                             ///
  ///  1) Set the relevant paths in your computer. You need to provide:		 	 ///
- ///	project           -> folder where all the other folders are stored         ///
- ///										 									 ///
- ///	code     	      -> subfolder containing all dofiles		 ///
+ ///	code     	      -> working directory for code folder					 ///
  ///																			 ///
  ///	raw     	      -> subfolder where data sets are stored              	 ///
  ///     	      		 
@@ -75,9 +73,9 @@
 
   ***** Paths
   
-  *global code "Please insert here you working directory for project folder"
-  global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
-  *global code "/Users/marinabosque/Desktop/working_paper/code"
+  *global code "Please insert here you working directory for code folder"
+  *global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
+  global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"
 	
    cd ${code}	
@@ -87,22 +85,50 @@
  
 	capture program drop _all
 	quietly {	
+	 
+	 *** Datafix ASEC
 		do "Datafix_main_asec.do"
 		do "D_Precleaning_asec.do"
 		do "D_Idkatrina_asec.do"
 		do "D_Get_treat_control_asec.do"
-		do "D_Descriptive_asec.do"
 		do "D_Endogeneity_asec.do"
+		do "D_Household_asec.do"
 
+	 *** Datafix MORG
+		do "Datafix_main_morg.do"
+		do "D_cpi_morg.do"
+		do "D_Precleaning_morg.do"
+		do "D_Idkatrina_morg.do"
+		do "D_Get_treat_control_morg.do"
+
+	 *** Descriptives ASEC/MORG
+		do "Descriptives_main.do"
+		do "DE_Descriptive_asec.do"
+		do "DE_Descriptive_morg.do"
+		do "DE_Descriptive_asecmorg.do"
+		
+	 *** SCM ASEC
 		do "Synthetic_main_asec.do"
 		do "S_SCM_asec.do"
 		do "S_Pretrends_asec.do"
 		do "S_Placebos_asec.do"
+
+	 *** SCM MORG
+		*do "Synthetic_main_morg.do"
+		*do "S_SCM_morg.do"
+		*do "S_Pretrends_morg.do"
+		*do "S_Placebos_morg.do"
 		
+	 *** DID ASEC
 		do "DiffinDiff_asec.do"
+		
+	 *** DID MORG
+		*do "DiffinDiff_morg.do"
 	}
 
   **** Execute programs
+  
+	*** ASEC
 		
 		datafix_asec
 		
@@ -110,6 +136,16 @@
 		
 		did_asec
 		
-		*datafix_morg
+	*** MORG
+		
+		datafix_morg
+		
+		*synth_control_morg
+		
+		*did_morg
+
+	*** Descriptives
+	
+		descriptives
 		
 ************************************************************************************

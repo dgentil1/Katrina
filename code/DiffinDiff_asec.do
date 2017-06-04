@@ -1,5 +1,5 @@
  
- *------------------------ Difference-in-Differences --------------------------*
+ *-------------------- Difference-in-Differences (ASEC) ----------------------*
 
   ***** Define Program 
 
@@ -149,7 +149,6 @@
 		collapse `outcomes' if `sample'==1 [aw=wtsupp], by(year) 
 		gen `sample' = 1
 		save "../temp/trend_`sample'`educ_level'.dta", replace 
-		cap saveold "../temp/trend_`sample'`educ_level'.dta", v(12) replace 
 	}
 	
 	append using "../temp/trend_treat_expanded`educ_level'.dta"

@@ -1,5 +1,5 @@
  
- *------------------------- Synthetic Control Method --------------------------*
+ *----------------- Building Synthetic Control Method (ASEC) -----------------*
 
   ***** Define Program 
 
@@ -60,7 +60,6 @@ program build_synth_control
 	keep if num_year == `num_years' /* to balance the panel against missing values */
 
 	save "../temp/donorpool_`city'`stub'.dta", replace
-    cap saveold "../temp/donorpool_`city'`stub'.dta", v(12) replace
 	
 	local number_outcomes: word count `outcomes'
 	forval i = 1/`number_outcomes' {
@@ -89,7 +88,6 @@ program build_synth_control
 		drop metcode2 _W_Weight
 
 		save "../temp/synth_`city'_`var'`stub'.dta", replace
-		cap saveold "../temp/synth_`city'_`var'`stub'.dta", v(12) replace
 	}
 
 	local number_outcomes: word count `outcomes'
@@ -102,8 +100,8 @@ program build_synth_control
 		merge 1:1 year using "../temp/synth_`city'_`outcome_var'`stub'", nogen
 	}
 	save "../derived_asec/controltrends_`city'`stub'.dta", replace
-	cap saveold "../derived_asec/controltrends_`city'`stub'.dta", v(12) replace
 	restore
+	
 end
   
 ********************************************************************************
