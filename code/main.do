@@ -91,7 +91,6 @@
 		do "D_Precleaning_asec.do"
 		do "D_Idkatrina_asec.do"
 		do "D_Get_treat_control_asec.do"
-		do "D_Endogeneity_asec.do"
 		do "D_Household_asec.do"
 
 	 *** Datafix MORG
@@ -105,7 +104,7 @@
 		do "Descriptives_main.do"
 		do "DE_Descriptive_asec.do"
 		do "DE_Descriptive_morg.do"
-		do "DE_Descriptive_asecmorg.do"
+		do "DE_Endogeneity.do"
 		
 	 *** SCM ASEC
 		do "Synthetic_main_asec.do"
