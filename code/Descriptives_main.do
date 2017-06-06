@@ -18,7 +18,7 @@
 	de_descriptive_morg
 
 	di "     Descriptive statistics (ASEC-MORG)", as text
-	*de_descriptive_asecmorg
+	de_endogeneity
 
   end
   

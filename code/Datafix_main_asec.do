@@ -19,12 +19,6 @@
 
 	di "     Getting treated and control list (ASEC)", as text
 	d_get_treat_control_asec
-	
-	di "     Descriptive statistics (ASEC)", as text
-	d_descriptive_asec
-
-	di "     Controlling against endogeneity in relocation (ASEC)", as text
-	d_endogeneity_asec
 
 	di "     Household shares (ASEC)", as text
 	d_hhshares_asec
