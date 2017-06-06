@@ -110,6 +110,7 @@
 		gen bluecol=0
 		replace bluecol=. if ind80==. | ind02==.
 		replace bluecol=1 if (ind80>=10 & ind80<=691) | (ind02>=170 & ind02<=6780)
+		replace bluecol=1 if (ind80==991) | (ind02==9890) /* Armed Forces + Unemployed*/
 		
 		gen whitecol=0
 		replace whitecol=. if (ind80==. | ind02==.)		
@@ -124,7 +125,7 @@
 		label var whitecol "White-collar"
 		label var workcat "Work categories"
 
-		label define lblworkcat 0 "Armed Forces" 1 "Blue-collar" 2 "White-collar" 
+		label define lblworkcat 1 "Blue-collar" 2 "White-collar" 
 		label values workcat lblworkcat
 	
 	* Occupation *
@@ -139,7 +140,7 @@
 		replace kindocc=600 if (occ80>=703&occ80<=889) & (year>=1996&year<2000)
 		replace kindocc=700 if (occ80>=403&occ80<=469) & (year>=1996&year<2000)
 		replace kindocc=810 if (occ80>=473&occ80<=499) & (year>=1996&year<2000)
-		replace kindocc=999 if (occ80>=900|occ80==0) & (year>=1996&year<2000)
+		replace kindocc=1 if (occ80==905) & (year>=1996&year<2000) /*Unemployed + Armed Forces*/
 		replace kindocc=. if occ80==. & (year>=1996&year<2000)		
 		 
 
@@ -152,7 +153,7 @@
 		replace kindocc=500 if (occ00>=612&occ00<=983) & (year>=2000 & year<2011)
 		replace kindocc=700 if (occ00>=360&occ00<=469) & (year>=2000 & year<2011)
 		replace kindocc=810 if (occ00>=600&occ00<=611) & (year>=2000 & year<2011)
-		replace kindocc=999 if (occ00==0|occ00>=984) & (year>=2000 & year<2011)
+		replace kindocc=1 if (occ00==984) & (year>=2000 & year<2011) /*Armed Forces*/
 		replace kindocc=. if occ00==. & (year>=2000 & year<2011)		
 
 		* Years 2011
@@ -164,7 +165,7 @@
 		replace kindocc=500 if (occ2011>=612&occ2011<=983) & (year>=2011 & year<2012)
 		replace kindocc=700 if (occ2011>=360&occ2011<=469) & (year>=2011 & year<2012)
 		replace kindocc=810 if (occ2011>=600&occ2011<=611) & (year>=2011 & year<2012)
-		replace kindocc=999 if (occ2011==0|occ2011>=984) & (year>=2011 & year<2012)
+		replace kindocc=1 if (occ2011==984) & (year>=2011 & year<2012) /*Armed Forces*/
 		replace kindocc=. if occ2011==. & (year>=2011 & year<2012)		
 
 		* Years from 2012 to 2014		
@@ -176,19 +177,21 @@
 		replace kindocc=500 if (occ2012>=612&occ2012<=983) & (year>=2012)
 		replace kindocc=700 if (occ2012>=360&occ2012<=469) & (year>=2012)
 		replace kindocc=810 if (occ2012>=600&occ2012<=611) & (year>=2012)
-		replace kindocc=999 if (occ2012==0|occ2012>=984) & (year>=2012)
+		replace kindocc=1 if (occ2012==984) & (year>=2012) /*Armed Forces*/
 		replace kindocc=. if occ2012==. & (year>=2012)		
 		 
 		label variable kindocc "Occupation"
 
-		gen collarocc=3 if kindocc>980
+		gen collarocc=4 if kindocc>980
+		gen collarocc=3 if kindocc==1
 		replace collarocc=2 if kindocc>=500 & kindocc<=980
 		replace collarocc=1 if kindocc>=0 & kindocc<=499
 		
 		label variable collarocc "Type of Job"
 		label define collarocclbl 1 "White-collar", add 
 		label define collarocclbl 2 "Blue-collar", add
-		label define collarocclbl 3 "Unemployed or Armed Forces", add
+		label define collarocclbl 3 "Armed Forces", add
+		label define collarocclbl 4 "Unemployed", add
 		label values collarocc collarocclbl
 	
 	* Wages *

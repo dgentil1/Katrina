@@ -101,7 +101,7 @@
 	* Industry *
 	
 		gen bluecol=0
-		replace bluecol=. if (ind1950==0 |ind1950==997 |ind1950==998)
+		replace bluecol=. if (ind1950==0 |ind1950==997 |ind1950==998) 
 		replace bluecol=1 if (ind1950>=105 & ind1950<=699)
 
 		gen whitecol=0
@@ -117,7 +117,7 @@
 		label var whitecol "White-collar"
 		label var workcat "Work categories"
 
-		label define lblworkcat 0 "Armed Forces" 1 "Blue-collar" 2 "White-collar"
+		label define lblworkcat 0 "Unknown" 1 "Blue-collar" 2 "White-collar"
 		label values workcat lblworkcat
 	
 	* Occupation *
@@ -131,7 +131,8 @@
 		replace kindocc=600 if (occ>=703&occ<=889) & (year>=1996&year<=2002)
 		replace kindocc=700 if (occ>=403&occ<=469) & (year>=1996&year<=2002)
 		replace kindocc=810 if (occ>=473&occ<=499) & (year>=1996&year<=2002)
-		replace kindocc=999 if (occ>=900|occ==0) & (year>=1996&year<=2002)
+		replace kindocc=999 if (occ==0) & (year>=1996&year<=2002) /*Unknown*/
+		replace kindocc=1 if (occ>=900) & (year>=1996&year<=2002) /*Armed forces + Unemployed*/
 
 		* Years from 2003 to 2014
 		replace occ=occ/10 if occ>=0 & year>=2003
@@ -142,18 +143,21 @@
 		replace kindocc=500 if (occ>=612&occ<=983) & year>=2003
 		replace kindocc=700 if (occ>=360&occ<=469) & year>=2003
 		replace kindocc=810 if (occ>=600&occ<=611) & year>=2003
-		replace kindocc=999 if (occ==0|occ>=984) & year>=2003
+		replace kindocc=999 if (occ==0) & year>=2003 /*Unknown*/
+		replace kindocc=1 if (occ>=984) & year>=2003 /*Armed forces*/
 		
 		label variable kindocc "Occupation"
 
-		gen collarocc=3 if kindocc>980
+		gen collarocc=4 if kindocc>980 /*Unknown*/
+		gen collarocc=3 if kindocc==1 /*Armed forces*/
 		replace collarocc=2 if kindocc>=500 & kindocc<=980
-		replace collarocc=1 if kindocc>=0 & kindocc<=499
+		replace collarocc=1 if kindocc>=2 & kindocc<=499
 		
 		label variable collarocc "Type of Job"
 		label define collarocclbl 1 "White-collar", add 
 		label define collarocclbl 2 "Blue-collar", add
-		label define collarocclbl 3 "Unemployed or Armed Forces", add
+		label define collarocclbl 3 "Armed Forces", add
+		label define collarocclbl 4 "Unknown", add
 		label values collarocc collarocclbl
 	
 	* Wages *
