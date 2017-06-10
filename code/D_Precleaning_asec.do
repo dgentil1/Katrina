@@ -16,8 +16,8 @@
 
 	keep year serial hwtsupp metarea hhincome cpi99 month pernum wtsupp age sex race     ///
 		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage incwage ///
-		 offpov katevac katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
-		 occ bpl
+		 offpov katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
+		 occ bpl whymove
 	
  ***** Dropping/Adjusting variables 
 
@@ -61,10 +61,17 @@
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
 
-	* Native * 
+	* Native US * 
 	
-		gen native=1*(bpl<15000)
+		gen native_usa=1*(bpl<15000)
 	
+	* Local Native *
+		
+		gen whymove_job=1*(whymove>=4 & whymove<=8)
+		gen sameplace=1*(migrate1>=1 & migrate1<=3 & whymove_job!=1)
+		
+		gen native_msa= 1*(native_usa==1 & sameplace==1)
+		
 	* Education status *
 	
 		gen nohighsch = educ<70 
@@ -240,4 +247,4 @@
 
   end
 
-********************************************************************************  
+********************************************************************************
