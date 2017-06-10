@@ -19,10 +19,7 @@
 
 	di "     Getting treated and control list (ASEC)", as text
 	d_get_treat_control_asec
-
-	di "     Household shares (ASEC)", as text
-	d_hhshares_asec
-
+	
   end
   
-********************************************************************************  
+********************************************************************************
