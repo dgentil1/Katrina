@@ -13,11 +13,11 @@
 
 	clear matrix 
 	tabstat age nohighsch highsch somecollege college black mexican ///
-				   nmhispan white other poor if evac == 1 [aw=wtsupp], c(s) stat(mean semean) save
+				   nmhispan white other if evac == 1 [aw=weight], c(s) stat(mean semean) save
 	matrix pre_output = r(StatTotal)'
 	
 	tabstat age nohighsch highsch somecollege college black mexican ///
-				   nmhispan white other poor if evac == 0 [aw=wtsupp], c(s) stat(mean semean) save
+				   nmhispan white other if evac == 0 [aw=weight], c(s) stat(mean semean) save
 	matrix pre_output = (pre_output , r(StatTotal)')
 
 	svmat pre_output
@@ -41,19 +41,19 @@
 	keep if year==2006
 	
 	clear matrix 
-	tabstat emplyd inactive unem hours_worked [aw=wtsupp], c(s) stat(mean semean) save
+	tabstat emplyd inactive unem hours_worked [aw=weight], c(s) stat(mean semean) save
 	matrix output = r(StatTotal)
 	
-	tabstat emplyd inactive unem hours_worked if treat==1 [aw=wtsupp], c(s) stat(mean semean) save
+	tabstat emplyd inactive unem hours_worked if treat==1 [aw=weight], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 	
-	tabstat emplyd inactive unem hours_worked if control==1 [aw=wtsupp], c(s) stat(mean semean) save
+	tabstat emplyd inactive unem hours_worked if control==1 [aw=weight], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 	
-	tabstat emplyd inactive unem hours_worked if evac==1 [aw=wtsupp], c(s) stat(mean semean) save
+	tabstat emplyd inactive unem hours_worked if evac==1 [aw=weight], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 	
-	tabstat emplyd inactive unem hours_worked if (treat==1 & evac==1) [aw=wtsupp], c(s) stat(mean semean) save
+	tabstat emplyd inactive unem hours_worked if (treat==1 & evac==1) [aw=weight], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 
 	mat2txt, matrix(output) saving("../tables/labor_status_sample.txt") replace ///

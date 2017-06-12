@@ -217,26 +217,19 @@
 		label var lr_h_wage "Logarithm real hourly wage"
 		
 	* Metropolitan Areas *
-	
+	    
+		drop if (missing(msafips) & missing(cbsafips))
 		gen metarea = .
-		replace metarea = msafips 
-		replace metarea = cbsafips if missing(msafips)
-
-		tostring metarea, gen(metarea1)
-		destring metarea1, gen(metarea2)
-
-		gen metcode=substr(metarea1,1,1) if metarea2<100
-		replace metcode=substr(metarea1,1,2) if metarea2>=100 & metarea2<1000
-		replace metcode=substr(metarea1,1,3) if metarea2>=1000 
-
-		destring metcode, gen(metcode2)
-		label var metcode2 "Metropolitan Area"
+		replace metarea = msafips
+		replace metarea = cbsafips if missing(metarea)
+		drop if metarea == 0
 		
-		drop metarea metarea1 metarea2 metcode
-
-		* We drop observations out of metropolitan areas or in unidentified ones *
-		drop if missing(metcode2)
-
+		gen metarea_string = ""
+		decode msafips, gen(msafips_string)
+		decode cbsafips, gen(cbsafips_string)
+		replace metarea_string = msafips_string if msafips_string != ""
+		replace metarea_string = cbsafips_string if cbsafips_string != ""
+	
 	* Individual identifier *
 	
 		gen id = _n

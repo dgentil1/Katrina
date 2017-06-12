@@ -14,10 +14,11 @@
 	
  ***** Keeping needed variables
 
-	keep year serial hwtsupp metarea hhincome cpi99 month pernum wtsupp age sex race     ///
+	keep year serial metarea hhincome cpi99 month pernum wtsupp age sex race     ///
 		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage incwage ///
 		 offpov katevac katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
 		 occ bpl
+	rename (wtsupp marst) (weight marital)
 	
  ***** Dropping/Adjusting variables 
 
@@ -63,7 +64,6 @@
 
 	* Native * 
 	
-		gen native=1*(bpl<15000)
 	
 	* Education status *
 	
@@ -190,20 +190,6 @@
 		label var r_h_wage "Real hourly wage"
 		label var lr_w_wage "Logarithm real weekly wage"
 		label var lr_h_wage "Logarithm real hourly wage"
-		
-	* Poverty status *
-
-		gen poor = (offpov==1)
-		// Generating dummy for observation being below poverty line
-
-		label var poor "Poverty status"
-
-	* Household income *
-	
-		gen hhld_inc = hhincome if hhincome>=0
-		// Generating household income
-
-		label var hhld_inc "Household income"
 
 	* Metropolitan Areas *
 	
@@ -222,6 +208,7 @@
 		// Unifying metarea codes, because there were changes in definitions
 
 		label var metcode2 "Metropolitan Area"
+		replace metcode2 = 413 if metcode2 == 412
 
 	* Individual identifier *
 	

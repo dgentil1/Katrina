@@ -3,25 +3,23 @@
 
   ***** Define Program 
 
-  program define s_placebos_asec
-
-	local control_vars = "unem wksunem1 hours_worked poor " + ///
-		"sex white other black manuf bluecol whitecol " + ///
-		"age nohighsch highsch somecollege college nmhispan " + ///
-		"mexican"
-	
+  program define placebos
+  
+    local control_vars = "unem hours_worked " + ///
+		"sex white other black nmhispan mexican bluecol whitecol " + ///
+		"age nohighsch highsch somecollege college"
 	local outcome_vars	= "lr_w_wage emplyd inactive"
 	
 	local stub_list = "Log-wage Employment Inactivity"
 
-	foreach city in houston dallas fayetteville {
-		s_plac_inputs, outcomes(`outcome_vars') controls(`control_vars') tr_period(2006) city(`city')
-		s_plac_plots, outcomes(`outcome_vars') controls(`control_vars') stub(`stub_list') city(`city')
+	foreach samples in asec morg {
+		s_plac_inputs, data_stub(`samples') outcomes(`outcome_vars') controls(`control_vars') tr_period(2006) city(houston)
+		s_plac_plots, data_stub(`samples') outcomes(`outcome_vars') controls(`control_vars') stub(`stub_list') city(houston)
 	}
 	
-	local control_vars = "unem wksunem1 hours_worked poor " + ///
-		"sex white other black manuf bluecol whitecol " + ///
-		"age nmhispan mexican"
+   local control_vars = "unem hours_worked " + ///
+		"sex white other black nmhispan mexican bluecol whitecol " + ///
+		"age"
 	
 	local education_levels = "nohighsch highsch somecollege college"
     
@@ -29,27 +27,15 @@
     
 	local number_educations: word count `education_levels'
     
-	forval i = 1/`number_educations' {
-		local education: word `i' of `education_levels'
-		local education_title: word `i' of `education_titles'
-		
-		* Houston *
-		s_plac_inputs, outcomes(`outcome_vars') controls(`control_vars') ///
-		    tr_period(2006) city(houston) level(_`education')
-		s_plac_plots, outcomes(`outcome_vars') controls(`control_vars') ///
-		    stub(`stub_list') city(houston) level(_`education') title(`education_title')
-		
-		* Dallas *
-		s_plac_inputs, outcomes(`outcome_vars') controls(`control_vars') ///
-		    tr_period(2006) city(dallas) level(_`education')
-		s_plac_plots, outcomes(`outcome_vars') controls(`control_vars') ///
-		    stub(`stub_list') city(dallas) level(_`education') title(`education_title')
-		
-		* Fayetteville *
-		s_plac_inputs, outcomes(`outcome_vars') controls(`control_vars') ///
-		    tr_period(2006) city(fayetteville) level(_`education')
-		s_plac_plots, outcomes(`outcome_vars') controls(`control_vars') ///
-		    stub(`stub_list') city(fayetteville) level(_`education') title(`education_title')
+	foreach  samples in asec morg {
+		forval i = 1/`number_educations' {
+			local education: word `i' of `education_levels'
+			local education_title: word `i' of `education_titles'
+			s_plac_inputs, data_stub(`samples') outcomes(`outcome_vars') controls(`control_vars') ///
+				tr_period(2006) city(houston) level(_`education')
+			s_plac_plots, data_stub(`samples') outcomes(`outcome_vars') controls(`control_vars') ///
+				stub(`stub_list') city(houston) level(_`education') title(`education_title')
+		}
 	}
   
   end
@@ -60,9 +46,9 @@
 
   program define s_plac_inputs
   
-    syntax [if], outcomes(string) controls(string) tr_period(string) city(string) [level(string)]
+    syntax [if], data_stub(string) outcomes(string) controls(string) tr_period(string) city(string) [level(string)]
 
-    use "../temp/donorpool_`city'`level'.dta", clear
+    use "../temp/`data_stub'_donorpool_`city'`level'.dta", clear
 
 	sum metcode2 if `city' == 1
 	
@@ -72,8 +58,8 @@
 	levelsof metcode2, local(groups)
 
 	local number_outcomes: word count `outcomes'
-	forval i = 1/`number_outcomes' {		
-		local var: word `i' of `outcomes'
+	forval j = 1/`number_outcomes' {		
+		local var: word `j' of `outcomes'
 		local lag1 = `tr_period' - 9
 		local lag2 = `tr_period' - 8
 		local lag3 = `tr_period' - 7
@@ -83,35 +69,35 @@
 		local lags = "`var'(`lag1') `var'(`lag2') `var'(`lag3') `var'(`lag4') `var'(`lag5') `var'(`lag6')"
 
 		foreach i of local groups {
-	        use "../temp/donorpool_`city'`level'.dta", clear
+	        use "../temp/`data_stub'_donorpool_`city'`level'.dta", clear
 			xtset metcode2 year
 			
-			synth `var' `controls' `lags', ///
+			qui synth `var' `controls' `lags', ///
 				   trunit(`i') trperiod(`tr_period') ///
-			       keep("../temp/synth_`var'`level'_`i'.dta", replace)
+			       keep("../temp/`data_stub'_synth_`var'`level'_`i'.dta", replace)
 			
-			use "../temp/synth_`var'`level'_`i'.dta", clear
+			use "../temp/`data_stub'_synth_`var'`level'_`i'.dta", clear
 			rename _time years
 			gen tr_effect_`i' = _Y_treated - _Y_synthetic
 			keep years tr_effect_`i'
 			drop if missing(years)
-			save "../temp/synth_`var'`level'_`i'.dta", replace
+			save "../temp/`data_stub'_synth_`var'`level'_`i'.dta", replace
 		}
 	}
 	
 	forval i = 1/`number_outcomes' {	
 		local var: word `i' of `outcomes'
-		use "../temp/synth_`var'`level'_`min_unit'.dta", clear
+		use "../temp/`data_stub'_synth_`var'`level'_`min_unit'.dta", clear
 		foreach i of local groups {
-			merge 1:1 years using "../temp/synth_`var'`level'_`i'.dta", nogen
+			merge 1:1 years using "../temp/`data_stub'_synth_`var'`level'_`i'.dta", nogen
 	}
 		
-		save "../temp/allsynth_`var'_`city'`level'.dta", replace
+		save "../temp/`data_stub'_allsynth_`var'_`city'`level'.dta", replace
 		
 		rename tr_effect_`trunit' `city'
 		keep year `city'
 		
-		save "../temp/`var'_`city'`level'.dta", replace
+		save "../temp/`data_stub'_`var'_`city'`level'.dta", replace
 	}
 	
   end
@@ -122,9 +108,9 @@
 
   program define s_plac_plots
 	
-    syntax, outcomes(string) controls(string) stub(string) city(string) [level(string) title(string)]
+    syntax, data_stub(string) outcomes(string) controls(string) stub(string) city(string) [level(string) title(string)]
     
-	use "../temp/donorpool_`city'`level'.dta", clear
+	use "../temp/`data_stub'_donorpool_`city'`level'.dta", clear
     
 	levelsof metcode2, local(groups)
 	local number_outcomes: word count `outcomes'
@@ -133,14 +119,13 @@
 		local var: word `i' of `outcomes'
         local stub_var: word `i' of `stub'
 
-	    use "../temp/allsynth_`var'_`city'`level'.dta", clear
-        merge 1:1 year using "../temp/`var'_`city'`level'.dta", nogen
+	    use "../temp/`data_stub'_allsynth_`var'_`city'`level'.dta", clear
+        merge 1:1 year using "../temp/`data_stub'_`var'_`city'`level'.dta", nogen
 		sum `city' if years < 2006
 		local bound = 5*(abs(r(max)) + abs(r(min)))
 		local lp
 	    foreach i of local groups {
-		    sum tr_effect_`i' if years < 2006
-			
+		    qui sum tr_effect_`i' if years < 2006
 			if r(max)< `bound' & r(min)>-`bound' {
 				local lp `lp' line tr_effect_`i' years , lcolor(gs12) ||
 			}
@@ -153,7 +138,7 @@
 			   bgcolor(white) graphregion(color(white)) xtitle("Year") ///
 			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") ///
 			   xscale(range(1996 2014)) ylabel(#3)
-		graph export "../figures/placebo_`var'`level'", replace as(eps)
+		graph export "../figures/`data_stub'_placebo_`var'`level'`city'", replace as(eps)
 	}
 	
 	forval i = 1/`number_outcomes' {
@@ -162,12 +147,13 @@
 	}
 	
 	local city_stub = proper("`city'")
+	local data_legend = upper("`data_stub'")
 	
 	graph combine `plots', rows(3) graphregion(color(white)) ysize(8) xsize(6.5) ///
-	       title({bf: `city_stub': `title' Placebo Checks}, color(black) size(small)) ///
+	       title({bf: `data_legend' - `city_stub': `title' Placebo Checks}, color(black) size(small)) ///
 		   note("{it:Note:} Each graph reports the difference in the outcome variable between treated group and""synthetic control, assuming a treatment in 2005, for 86 metropolitan areas. The bold blue line""represents `city_stub' and the grey lines represent the other metropolitan areas in the control group.""The top figure shows the graph for the logarithm of weekly wages, the figure in the middle""shows it for the employment and the bottom figure for inactivity.", size(vsmall)) ///
-		   caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
-	graph export "../figures/placebo`level'`city'", replace as(eps)
+		   caption("{it:Source:} CPS `data_legend' 1996 - 2014.", size(vsmall))
+	graph export "../figures/`data_stub'_placebo`level'`city'", replace as(eps)
   
   end 
 

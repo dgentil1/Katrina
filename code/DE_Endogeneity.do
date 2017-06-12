@@ -1,91 +1,127 @@
- 
- *-------------------------- Endogeneity (ASEC-MORG) --------------------------*
+*-------------------------- Endogeneity (ASEC-MORG) --------------------------*
 
  ***** Define Program 
 
-  program define de_endogeneity
+program define de_endogeneity
+	  	
+	* Matching metcodes
 	
-  ***** Create the distance to New Orleans dataset 
-  	
-	import delimited "../GIS/layers/distance_matrix.csv", encoding(ISO-8859-1) clear
+    import delimited "../GIS/Layers/cb_2016_us_cbsa_5m.csv", encoding(ISO-8859-1) clear
 	
-	drop targetid
-	rename msa metarea   
-	drop if missing(metarea)
+	rename cbsafp cbsafips
+	
+    drop if missing(cbsafips) 
+	merge 1:m cbsafips using "../derived_morg/xwalk_msafips_cbsa.dta", nogen keep(3)
+	
+	merge m:1 metcode2 using "../temp/treat_reconciliation.dta", nogen
 
-	tostring metarea, gen(metarea1)
-	destring metarea1, gen(metarea2)
+	keep geoid metcode2 share_evac_asec share_evac_morg treat treat_expanded control kat_affected
 
-	gen metcode=substr(metarea1,1,1) if metarea2<100
-	replace metcode=substr(metarea1,1,2) if (metarea2>=100 & metarea2<1000)
-	replace metcode=substr(metarea1,1,3) if metarea2>=1000 
+	export delimited using "C:\Users\dgentil1\Documents\Katrina\Katrina\GIS\Layers\cbsa_metcode_matched.csv", replace
+	
+    * Importing distance_matrix 
+	
+	import delimited C:\Users\dgentil1\Documents\Katrina\Katrina\GIS\Layers\MSA_distance.csv, clear
+	
+	drop if missing(metcode2)
+	save "../temp/msa_distance.dta", replace
 
-	destring metcode, gen(metcode2)
+ ***** Adding in-sample pre-treatment labor outcomes
 
-	collapse (mean) distance, by (metcode2)
+    * ASEC
+	
+	use "../derived_asec/CPSASECfinal.dta", clear
+	
+    preserve
+		keep if year==2005
+		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [pw=weight], by(metcode2)
 
-	save "../temp/distance_matrix.dta", replace
+		merge 1:m metcode2 using "../temp/msa_distance.dta", nogen
+		
+	    collapse distance lr_w_wage_1 lr_h_wage_1 unem_1 treat treat_expanded control kat_affected share_evac_asec, by(metcode2)
+				
+		save "../temp/endogeneity_1year.dta", replace
+	restore
+	
+	keep if (year==2001 | year==2002 | year==2003 | year==2004 | year==2005)
+	collapse (mean) lr_w_wage_5 = lr_w_wage lr_h_wage_5 = lr_h_wage unem_5 = unem [pw=weight], by(metcode2)
 
+	merge 1:m metcode2 using "../temp/msa_distance.dta", nogen
 	
-  ***** Merge with ASEC and MORG
-  
-  *** Share of evacuees ASEC + Wages and Unemployment
-  
-	use "../derived_asec/lot_evac_list_to_match.dta", clear
-	merge 1:1 metcode2 using "../derived_asec/lot_evac_list.dta", nogen
+	collapse lr_w_wage_5 lr_h_wage_5 unem_5, by(metcode2)
+		
+	save "../temp/endogeneity_5year.dta", replace
 	
-	gen sample = 0 					/*Identify the sample*/
+	merge 1:1 metcode2 using "../temp/endogeneity_1year.dta", nogen
 	
-	save "../temp/lot_evac_list_to_match_sample.dta", replace
+	rename (lr_w_wage_1 lr_w_wage_5 unem_1 unem_5) =_asec
 
-	
-  *** Share of evacuees MORG + Wages and Unemployment
-  
-	use "../derived_morg/lot_evac_list_to_match.dta", clear
-	merge 1:1 metcode2 using "../derived_morg/lot_evac_list.dta", nogen
-	
-	gen sample = 1 					/*Identify the sample*/
-	
-	
-  *** ASEC + MORG
-	
-	append using "../temp/lot_evac_list_to_match_sample.dta"
-	
+	save "../derived_asec/endogeneity.dta", replace
 
-  *** ASEC and MORG + Distance
+	* MORG
 	
-	merge m:1 metcode2 using "../temp/distance_matrix.dta", nogen
+    use "../derived_morg/MORGfinal.dta", clear
 	
-	gen share_evac_MORG = share_evac if sample==1
-	
-	rename share_evac share_evac_ASEC
-	replace share_evac_ASEC = . if sample==1
+    preserve
+		keep if year==2005
+		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [pw=weight], by(metcode2)
 
-	*export delimited using "../GIS/layers/distance_matrix_matched.csv", replace
+		merge 1:m metcode2 using "../temp/msa_distance.dta", nogen
+		
+	    collapse distance lr_w_wage_1 lr_h_wage_1 unem_1 treat treat_expanded control kat_affected share_evac_morg, by(metcode2)
+				
+		save "../temp/endogeneity_1year.dta", replace
+	restore
+	
+	keep if (year==2001 | year==2002 | year==2003 | year==2004 | year==2005)
+	collapse (mean) lr_w_wage_5 = lr_w_wage lr_h_wage_5 = lr_h_wage unem_5 = unem [pw=weight], by(metcode2)
 
+	merge 1:m metcode2 using "../temp/msa_distance.dta", nogen
+	
+	collapse lr_w_wage_5 lr_h_wage_5 unem_5, by(metcode2)
+		
+	save "../temp/endogeneity_5year.dta", replace
+	
+	merge 1:1 metcode2 using "../temp/endogeneity_1year.dta", nogen
+	
+	rename (lr_w_wage_1 lr_w_wage_5 unem_1 unem_5) =_morg
+	
+	save "../derived_morg/endogeneity.dta", replace
+	
+	* merge ASEC and MORG
+	
+	merge 1:1 metcode2 using "../derived_asec/endogeneity.dta", nogen
+	drop if missing(share_evac_morg)
+	
+	save "../temp/endogeneity.dta", replace
+		
+	* Compute regressions
+			
 	label var distance "Distance to New Orleans"
-	label var unem_1 "Average unemployment rate, last year"
-	label var unem_5 "Average unemployment rate, last 5 years"
-	label var lr_w_wage_1 "Average log-weekly wage, last year"
-	label var lr_w_wage_5 "Average log-weekly wage, last 5 years"
-	label var lr_h_wage_1 "Average hourly wage, last year"
-	label var lr_h_wage_5 "Average hourly wage, last 5 years"
-	label var share_evac_ASEC "Evacuees share (ASEC)"
-	label var share_evac_MORG "Evacuees share (MORG)"
-	label var treat "Treatment"
-
+	label var unem_1_asec "Average unemployment rate, last year"
+	label var unem_5_asec "Average unemployment rate, last 5 years"
+	label var lr_w_wage_1_asec "Average log-weekly wage, last year"
+	label var lr_w_wage_5_asec "Average log-weekly wage, last 5 years"
+	label var unem_1_morg "Average unemployment rate, last year"
+	label var unem_5_morg "Average unemployment rate, last 5 years"
+	label var lr_w_wage_1_morg "Average log-weekly wage, last year"
+	label var lr_w_wage_5_morg "Average log-weekly wage, last 5 years"
+	label var share_evac_asec "Evacuees share (ASEC)"
+	label var share_evac_morg "Evacuees share (MORG)"
+	label var treat_expanded "Treatment"
+	
 	eststo clear
 
-	eststo: reg share_evac_ASEC distance unem_1 lr_w_wage_1 if sample==0
-	eststo: reg share_evac_ASEC distance unem_5 lr_w_wage_5 if sample==0
-
-	eststo: reg share_evac_MORG distance unem_1 lr_w_wage_1 if sample==1
-	eststo: reg share_evac_MORG distance unem_5 lr_w_wage_5 if sample==1
+	eststo: reg share_evac_asec distance unem_1_asec lr_w_wage_1_asec
+	eststo: reg share_evac_asec distance unem_5_asec lr_w_wage_5_asec
+	
+	eststo: reg share_evac_morg distance unem_1_morg lr_w_wage_1_morg
+	eststo: reg share_evac_morg distance unem_5_morg lr_w_wage_5_morg
 	
  	esttab using "../tables/endogeneity.tex", r2 se nocons ///
 		   label compress replace width(2\hsize) title(Endogeneity of the treatment assignment)
+		   
+		   esttab, r2 se nocons ///
+		   label compress replace width(2\hsize) title(Endogeneity of the treatment assignment)
+end
 	
-  end
-
-********************************************************************************  
-

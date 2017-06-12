@@ -74,8 +74,8 @@
   ***** Paths
   
   *global code "Please insert here you working directory for code folder"
-  *global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
-  global code "/Users/marinabosque/Desktop/working_paper/code"
+  global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
+  *global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"
 	
    cd ${code}	
@@ -87,64 +87,73 @@
 	quietly {	
 	 
 	 *** Datafix ASEC
-		do "Datafix_main_asec.do"
 		do "D_Precleaning_asec.do"
 		do "D_Idkatrina_asec.do"
-		do "D_Get_treat_control_asec.do"
-		do "D_Household_asec.do"
+		
+	***Unifying metarea codes
+	    do "D_metarea_xwalk.do"
 
 	 *** Datafix MORG
-		do "Datafix_main_morg.do"
 		do "D_cpi_morg.do"
 		do "D_Precleaning_morg.do"
 		do "D_Idkatrina_morg.do"
-		do "D_Get_treat_control_morg.do"
 
 	 *** Descriptives ASEC/MORG
-		do "Descriptives_main.do"
 		do "DE_Descriptive_asec.do"
 		do "DE_Descriptive_morg.do"
 		do "DE_Endogeneity.do"
+		do "DE_Household.do"
 		
-	 *** SCM ASEC
-		do "Synthetic_main_asec.do"
-		do "S_SCM_asec.do"
-		do "S_Pretrends_asec.do"
-		do "S_Placebos_asec.do"
+	 *** Treatment assignment reconciliation ASEC/MORG
+		do "D_Treatment_reconciliation.do"
+		
+	 *** SCM
+		do "S_SCM.do"
+		do "S_Pretrends.do"
+		do "S_Placebos.do"
 
-	 *** SCM MORG
-		*do "Synthetic_main_morg.do"
-		*do "S_SCM_morg.do"
-		*do "S_Pretrends_morg.do"
-		*do "S_Placebos_morg.do"
-		
-	 *** DID ASEC
-		do "DiffinDiff_asec.do"
-		
-	 *** DID MORG
-		*do "DiffinDiff_morg.do"
+	 *** DID
+		do "DiffinDiff.do"
 	}
 
   **** Execute programs
   
-	*** ASEC
+	*** Precleaning
 		
-		datafix_asec
+		d_precleaning_asec
 		
-		synth_control_asec
+		d_create_cpi
 		
-		did_asec
+		d_precleaning_morg
 		
-	*** MORG
+	*** Treatment assignment and reconciliation
+	    
+		d_idkatrina_asec
 		
-		datafix_morg
+		d_metarea_xwalk
 		
-		*synth_control_morg
+		d_idkatrina_morg
 		
-		*did_morg
-
-	*** Descriptives
+		d_treatment_reconciliation
+		
+    *** Descriptives
 	
-		descriptives
+		de_descriptive_asec
+		
+		de_descriptive_morg
+				
+		de_endogeneity
+		
+		de_household
+		
+	*** Analysis
+		
+		scm
+		
+		placebos
+		
+		pretrends
+		
+		did	
 		
 ************************************************************************************
