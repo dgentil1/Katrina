@@ -14,10 +14,11 @@
 	
  ***** Keeping needed variables
 
-	keep year serial hwtsupp metarea hhincome cpi99 month pernum wtsupp age sex race     ///
+	keep year serial metarea hhincome cpi99 month pernum wtsupp age sex race     ///
 		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage incwage ///
-		 offpov katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
-		 occ bpl whymove
+		 offpov katevac katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
+		 occ bpl
+	rename (wtsupp marst) (weight marital)
 	
  ***** Dropping/Adjusting variables 
 
@@ -61,17 +62,12 @@
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
 
-	* Native US * 
+	* Native * 
+		
+		gen native = (migrate1==1 | migrate1==2)
+		// Flagging natives as those individuals living in the same place or have moved
+		// within county. This is the best proxy to identify natives from a metropolitan area.
 	
-		gen native_usa=1*(bpl<15000)
-	
-	* Local Native *
-		
-		gen whymove_job=1*(whymove>=4 & whymove<=8)
-		gen sameplace=1*(migrate1>=1 & migrate1<=3 & whymove_job!=1)
-		
-		gen native_msa= 1*(native_usa==1 & sameplace==1)
-		
 	* Education status *
 	
 		gen nohighsch = educ<70 
@@ -201,20 +197,6 @@
 		label var r_h_wage "Real hourly wage"
 		label var lr_w_wage "Logarithm real weekly wage"
 		label var lr_h_wage "Logarithm real hourly wage"
-		
-	* Poverty status *
-
-		gen poor = (offpov==1)
-		// Generating dummy for observation being below poverty line
-
-		label var poor "Poverty status"
-
-	* Household income *
-	
-		gen hhld_inc = hhincome if hhincome>=0
-		// Generating household income
-
-		label var hhld_inc "Household income"
 
 	* Metropolitan Areas *
 	
@@ -233,6 +215,7 @@
 		// Unifying metarea codes, because there were changes in definitions
 
 		label var metcode2 "Metropolitan Area"
+		replace metcode2 = 413 if metcode2 == 412
 
 	* Individual identifier *
 	
@@ -247,4 +230,4 @@
 
   end
 
-********************************************************************************
+********************************************************************************  

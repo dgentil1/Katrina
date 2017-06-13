@@ -7,6 +7,11 @@
 
   use "../temp/MORG.dta", clear
   
+ ***** Adding metcode2
+ 
+    merge m:m metarea using "../derived_morg/xwalk_msafips_cbsa.dta", ///
+	    keepusing(metcode2) nogen
+  
  ***** Identifying Katrina affected areas 
 
 	gen kat_affected=0
@@ -18,7 +23,7 @@
 	gen evac = (purkat1 == 1)
 	// Katrina evacuees
 
-***** Flagging treated cities and creating diff-in-diff variables
+ ***** Flagging treated cities and creating diff-in-diff variables
  
 	gen houston = (metcode2==336)
 	gen dallas = (metcode2==192)
@@ -33,21 +38,18 @@
 	
 	save "../temp/MORG.dta", replace
 	
- ***** Creating the GIS matchable MSA's list and the share of evacuees in 2006
+	*** Computing the share of evacuees
 
 	keep if year == 2006
 	bysort metcode2: gen num_obs=_N
-	keep if num_obs > 100
+	keep if num_obs > 250
 	// Keeping year 2006 (Hurricane Katrina), counting the number of obs. in each 
-	// metropolitan area and keeping the ones with more than 100 obs.
-
+	// metropolitan area and keeping the ones with more than 250 obs
+	
 	collapse (mean) share_evac = evac kat_affected num_obs (sd) share_evac_sd = evac ///
 	    (count) obs = id [aw=weight], by(metcode2)
 	sort share_evac
-	// Computing the share of evacuees
-
-	save "../derived_morg/lot_evac_list_to_match.dta", replace
-
+	
 	local upper_thresholds  "5 1"
 	local significance_10 = 1.285
 	// Creating "arbitrary" upper and lower thresholds for the share of evacuees, 
@@ -75,30 +77,9 @@
 	
 	save "../derived_morg/lot_evac_list.dta", replace
 	
-		
- ***** Adding in-sample pre-treatment labor outcomes
-
 	use "../temp/MORG.dta", clear
-
-	preserve
-		keep if year==2005
-		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [aw=weight], by(metcode2)
-
-		merge 1:1 metcode2 using "../derived_morg/lot_evac_list.dta", nogen
-
-		save "../derived_morg/lot_evac_list.dta", replace
-	restore
-	// Creating the labor outcome variables for the year before Katrina Hurricane
 	
-	keep if (year==2001 | year==2002 | year==2003 | year==2004 | year==2005)
-	collapse (mean) lr_w_wage_5 = lr_w_wage lr_h_wage_5 = lr_h_wage unem_5 = unem [aw=weight], by(metcode2)
-
-	merge 1:1 metcode2 using "../derived_morg/lot_evac_list.dta", nogen
-
-	save "../derived_morg/lot_evac_list.dta", replace
-	// Creating the labor outcome variables for the 5-years before Katrina Hurricane
-	
-	merge 1:m metcode2 using "../temp/MORG.dta", nogen
+	merge m:1 metcode2 using "../derived_morg/lot_evac_list.dta", nogen
 	sort metcode2 year
 	// Merging the new variables to the dataset
 	
@@ -106,14 +87,6 @@
 
 	save "../derived_morg/MORGfinal.dta", replace
 
-	
- ***** Save the dataset for diff-in-diff	
- 
-	keep if inlist(year,1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, ///
-		2008, 2009, 2010, 2011)
-	
-	save "../derived_morg/MORGfinal_did.dta", replace
-	
 	
   end
 

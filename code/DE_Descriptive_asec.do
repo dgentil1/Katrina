@@ -1,13 +1,13 @@
  
- *---------------------- Descriptive statistics (MORG) -----------------------*
+ *---------------------- Descriptive statistics (ASEC) -----------------------*
 
  ***** Define Program 
 
-  program define de_descriptive_morg
+  program define de_descriptive_asec
 	
  ***** Computing descriptives: demographic characteristics evacuees vs. non-evacuees
  
- 	use "../temp/MORG.dta", clear
+ 	use "../temp/CPSASEC.dta", clear
  
 	keep if year==2006
 
@@ -23,7 +23,7 @@
 	svmat pre_output
 
 	drop if missing(pre_output1)
-	keep pre_output*
+	keep pre_output* 
 	rename (pre_output1 pre_output2 pre_output3 pre_output4) (evac_mean evac_semean nevac_mean nevac_semean)
 	gen diff_mean = evac_mean - nevac_mean
 	gen se_diff_mean = sqrt(evac_semean^2 + nevac_semean^2)
@@ -37,7 +37,7 @@
 
  ***** Computing descriptives: labor status of treatment group, control group, and evacuees
 	
-	use "../derived_morg/MORGfinal.dta", clear
+	use "../derived_asec/CPSASECfinal.dta", clear
 	
 	keep if year==2006
 	
@@ -59,7 +59,7 @@
 
 	matrix rownames output = All SE Treated SE Control SE Evacuues SE Treat_and_Evaccues SE
 
-	esttab matrix(output) using "../tables/labor_status_sample_morg.tex", replace 
+	esttab matrix(output) using "../tables/labor_status_sample_asec.tex", replace 			 
 	
   end
 
