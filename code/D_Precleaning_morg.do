@@ -21,8 +21,9 @@
 	keep age cbsafips earnhre earnwke earnwt earnwtp ethnic grade92 hhid hhnum ///
 		 hrhtype hrhhid2 hrsample ind02 ind80 lfsr94 purkat1 purkat2 race sex ///
 		 uhourse weight weightp year msafips occ80 occ00 occ2011 occ2012 penatvty ///
-		 ownchild chldpres unionmme marital prunedur ftpt94
-
+		 ownchild chldpres unionmme marital prunedur ftpt94 pfamrel relref95
+	rename (hhid pfamrel relref95) (serial relate famrel)
+	
   ***** Adding CPI base 99 index (source FED data)
 	
 	merge m:1 year using "../derived_morg/CPI99morg.dta", nogen keep(3) assert(3) keepusing(cpi99)
@@ -68,10 +69,7 @@
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
 
-	* Native *
-		
-		gen native=1*(penatvty<100)
-		
+			
 	* Education status *
 	
 		gen nohighsch = grade92<38
@@ -130,69 +128,109 @@
 	
 	* Occupation *
 		
+		preserve
+			keep if year>=2000 & year<=2002
+			keep occ80 occ00
+			
+			bysort occ80: keep if _n==1
+			
+			rename occ00 occ2010
+			
+			save "../derived_morg/xwalk_occ.dta", replace
+			
+		restore
+		
+		merge m:1 occ80 using "../derived_morg/xwalk_occ.dta", nogen
+		
+		replace occ2010 = occ00 if year>=2003
+		replace occ2010 = occ2011 if year==2011
+		replace occ2010 = occ2012 if year>=2012
+		
+		replace occ2010=430  if occ2010==320	 	 
+		* Funeral directors --> Managers, nec
+		replace occ2010=1240 if occ2010==1230		 
+		* Statisticians --> Mathematical science occupations, nec
+		replace occ2010=3240 if occ2010==3120		 
+		* Podiatrists --> Therapists, nec
+		replace occ2010=6765 if occ2010==6430		 
+		* Paperhangers --> Construction workers, nec
+		replace occ2010=8220 if occ2010==7930		 
+		* Forging Machine Setters, Operators, and Tenders, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8220 if occ2010==7960		 
+		* Drilling and Boring Machine Tool Setters, Operators, and Tenders, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8220 if occ2010==8060		 
+		* Model Makers and Patternmakers, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8220 if occ2010==8150		 
+		* Heat Treating Equipment Setters, Operators, and Tenders, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8460 if occ2010==8340		 
+		* Shoe Machine Operators and Tenders --> Textile, Apparel, and Furnishings workers, nec
+		replace occ2010=9420 if occ2010==9230		 
+		* Railroad Brake, Signal, and Switch Operators --> Transportation workers, nec
+		replace occ2010=9920 if occ2010==.
+		* Unemployed
+		
+		
 		gen kindocc = .
-		 
-		* Years from 1996 to 1999
-		replace kindocc=. if occ80==. & (year>=1996&year<2000)
-		replace kindocc=0 if (occ80>=3&occ80<=199) & (year>=1996&year<2000)
-		replace kindocc=300 if (occ80>=203&occ80<=389) & (year>=1996&year<2000)
-		replace kindocc=500 if (occ80>=503&occ80<=699) & (year>=1996&year<2000)
-		replace kindocc=600 if (occ80>=703&occ80<=889) & (year>=1996&year<2000)
-		replace kindocc=700 if (occ80>=403&occ80<=469) & (year>=1996&year<2000)
-		replace kindocc=810 if (occ80>=473&occ80<=499) & (year>=1996&year<2000)
-		replace kindocc=1 if (occ80==905) & (year>=1996&year<2000) /*Unemployed + Armed Forces*/
-		replace kindocc=. if occ80==. & (year>=1996&year<2000)		
-		 
-
-		* Years from 2000 to 2010
-		replace occ00=occ00/10 if occ00>=0 & (year>=2000)
 		
-		replace kindocc=0 if (occ00>=1&occ00<=359) & (year>=2000 & year<2011) 
-		replace kindocc=300 if (occ00>=500&occ00<=599) & (year>=2000 & year<2011)
-		replace kindocc=400 if (occ00>=470&occ00<=499) & (year>=2000 & year<2011)
-		replace kindocc=500 if (occ00>=612&occ00<=983) & (year>=2000 & year<2011)
-		replace kindocc=700 if (occ00>=360&occ00<=469) & (year>=2000 & year<2011)
-		replace kindocc=810 if (occ00>=600&occ00<=611) & (year>=2000 & year<2011)
-		replace kindocc=1 if (occ00==984) & (year>=2000 & year<2011) /*Armed Forces*/
-		replace kindocc=. if occ00==. & (year>=2000 & year<2011)		
-
-		* Years 2011
-		replace occ2011=occ2011/10 if occ2011>=0 & (year>=2011 & year<2012)
+		replace kindocc = 1 if occ2010>=10 & occ2010<=430
+		replace kindocc = 2 if occ2010>=500 & occ2010<=740
+		replace kindocc = 3 if occ2010>=800 & occ2010<=950
+		replace kindocc = 4 if occ2010>=1000 & occ2010<=1240
+		replace kindocc = 5 if occ2010>=1300 & occ2010<=1540
+		replace kindocc = 6 if occ2010>=1550 & occ2010<=1560
+		replace kindocc = 7 if occ2010>=1600 & occ2010<=1980
+		replace kindocc = 8 if occ2010>=2000 & occ2010<=2060
+		replace kindocc = 9 if occ2010>=2100 & occ2010<=2160
+		replace kindocc = 10 if occ2010>=2200 & occ2010<=2550
+		replace kindocc = 11 if occ2010>=2600 & occ2010<=2960
+		replace kindocc = 12 if occ2010>=3000 & occ2010<=3540
+		replace kindocc = 13 if occ2010>=3600 & occ2010<=3655
+		replace kindocc = 14 if occ2010>=3700 & occ2010<=3955
+		replace kindocc = 15 if occ2010>=4000 & occ2010<=4160
+		replace kindocc = 16 if occ2010>=4200 & occ2010<=4250
+		replace kindocc = 17 if occ2010>=4300 & occ2010<=4650
+		replace kindocc = 18 if occ2010>=4700 & occ2010<=4965
+		replace kindocc = 19 if occ2010>=5000 & occ2010<=5940
+		replace kindocc = 20 if occ2010>=6000 & occ2010<=6130
+		replace kindocc = 21 if occ2010>=6200 & occ2010<=6765
+		replace kindocc = 22 if occ2010>=6800 & occ2010<=6940
+		replace kindocc = 23 if occ2010>=7000 & occ2010<=7630
+		replace kindocc = 24 if occ2010>=7700 & occ2010<=8965
+		replace kindocc = 25 if occ2010>=9000 & occ2010<=9750
+		replace kindocc = 26 if occ2010>=9800
+		replace kindocc = 27 if occ2010==9920 
 		
-		replace kindocc=0 if (occ2011>=1&occ2011<=359) & (year>=2011 & year<2012) 
-		replace kindocc=300 if (occ2011>=500&occ2011<=599) & (year>=2011 & year<2012)
-		replace kindocc=400 if (occ2011>=470&occ2011<=499) & (year>=2011 & year<2012)
-		replace kindocc=500 if (occ2011>=612&occ2011<=983) & (year>=2011 & year<2012)
-		replace kindocc=700 if (occ2011>=360&occ2011<=469) & (year>=2011 & year<2012)
-		replace kindocc=810 if (occ2011>=600&occ2011<=611) & (year>=2011 & year<2012)
-		replace kindocc=1 if (occ2011==984) & (year>=2011 & year<2012) /*Armed Forces*/
-		replace kindocc=. if occ2011==. & (year>=2011 & year<2012)		
-
-		* Years from 2012 to 2014		
-		replace occ2012=occ2012/10 if occ2012>=0 & (year>=2012)
-		
-		replace kindocc=0 if (occ2012>=1&occ2012<=359) & (year>=2012) 
-		replace kindocc=300 if (occ2012>=500&occ2012<=599) & (year>=2012)
-		replace kindocc=400 if (occ2012>=470&occ2012<=499) & (year>=2012)
-		replace kindocc=500 if (occ2012>=612&occ2012<=983) & (year>=2012)
-		replace kindocc=700 if (occ2012>=360&occ2012<=469) & (year>=2012)
-		replace kindocc=810 if (occ2012>=600&occ2012<=611) & (year>=2012)
-		replace kindocc=1 if (occ2012==984) & (year>=2012) /*Armed Forces*/
-		replace kindocc=. if occ2012==. & (year>=2012)		
-		 
+		label define kindocclbl 1 "Management in Business, Science, and Arts", add 
+		label define kindocclbl 2 "Business Operations Specialists", add 
+		label define kindocclbl 3 "Financial Specialists", add 
+		label define kindocclbl 4 "Computer and Mathematical", add 
+		label define kindocclbl 5 "Architecture and Engineering", add 
+		label define kindocclbl 6 "Technicians", add 
+		label define kindocclbl 7 "Life, Physical, and Social Science", add 
+		label define kindocclbl 8 "Community and Social Services", add 
+		label define kindocclbl 9 "Legal", add 
+		label define kindocclbl 10 "Education, Training, and Library", add 
+		label define kindocclbl 11 "Arts, Design, Entertainment, Sports, and Media", add 
+		label define kindocclbl 12 "Healthcare Practitioners and Technicians", add 
+		label define kindocclbl 13 "Healthcare Support", add 
+		label define kindocclbl 14 "Protective Service", add 
+		label define kindocclbl 15 "Food Preparation and Serving", add 
+		label define kindocclbl 16 "Building and Grounds Cleaning and Maintenance", add 
+		label define kindocclbl 17 "Personal Care and Service", add 
+		label define kindocclbl 18 "Sales and Related", add 
+		label define kindocclbl 19 "Office and Administrative Support", add 
+		label define kindocclbl 20 "Farming, Fisheries, and Forestry", add 
+		label define kindocclbl 21 "Construction", add 
+		label define kindocclbl 22 "Extraction", add 
+		label define kindocclbl 23 "Installation, Maintenance, and Repair", add 
+		label define kindocclbl 24 "Production", add 
+		label define kindocclbl 25 "Transportation and Material Moving", add 
+		label define kindocclbl 26 "Military", add 
+		label define kindocclbl 27 "Unemployed", add 
+		label values kindocc kindocclbl
 		label variable kindocc "Occupation"
-
-		gen collarocc=4 if kindocc>980
-		gen collarocc=3 if kindocc==1
-		replace collarocc=2 if kindocc>=500 & kindocc<=980
-		replace collarocc=1 if kindocc>=0 & kindocc<=499
-		
-		label variable collarocc "Type of Job"
-		label define collarocclbl 1 "White-collar", add 
-		label define collarocclbl 2 "Blue-collar", add
-		label define collarocclbl 3 "Armed Forces", add
-		label define collarocclbl 4 "Unemployed", add
-		label values collarocc collarocclbl
+		drop occ2010 
+		// Generating occupation categories
 	
 	* Wages *
 	
@@ -240,6 +278,7 @@
 
 		label var id "Individual identifier"
 
+		
 	* Saving the dataset
 	
 	save "../temp/MORG.dta", replace

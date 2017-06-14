@@ -14,10 +14,10 @@
 	
  ***** Keeping needed variables
 
-	keep year serial metarea hhincome cpi99 month pernum wtsupp age sex race     ///
+	keep year serial metarea hhincome cpi99 month pernum wtsupp age sex race  ///
 		 hispan educ educ99 empstat ind1950 wkswork1 wkswork2 ahrsworkt hourwage incwage ///
 		 offpov katevac katevac2 katprior wksunem1 marst occ2010 relate famrel migrate1 ///
-		 occ bpl
+		 bpl
 	rename (wtsupp marst) (weight marital)
 	
  ***** Dropping/Adjusting variables 
@@ -62,10 +62,10 @@
 							   3 "Black" 4 "White" 5 "Other"
 		label values ethnic lblethnic
 
-	* Native * 
+	* Local individuals * 
 		
-		gen native = (migrate1==1 | migrate1==2)
-		// Flagging natives as those individuals living in the same place or have moved
+		gen locals = (migrate1==1 | migrate1==3)
+		// Flagging locals as those individuals living in the same place or have moved
 		// within county. This is the best proxy to identify natives from a metropolitan area.
 	
 	* Education status *
@@ -124,45 +124,92 @@
 		label values workcat lblworkcat
 	
 	* Occupation *
+	
+		replace occ2010=430  if occ2010==320	 	 
+		* Funeral directors --> Managers, nec
+		replace occ2010=1240 if occ2010==1230		 
+		* Statisticians --> Mathematical science occupations, nec
+		replace occ2010=3240 if occ2010==3120		 
+		* Podiatrists --> Therapists, nec
+		replace occ2010=6765 if occ2010==6430		 
+		* Paperhangers --> Construction workers, nec
+		replace occ2010=7260 if occ2010==7125		 
+		* Electronic Repairs, nec --> Vehicle and Mobile Equipment Mechanics, Installers, and Repairers, nec
+		replace occ2010=8220 if occ2010==7930		 
+		* Forging Machine Setters, Operators, and Tenders, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8220 if occ2010==7960		 
+		* Drilling and Boring Machine Tool Setters, Operators, and Tenders, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8220 if occ2010==8060		 
+		* Model Makers and Patternmakers, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8220 if occ2010==8150		 
+		* Heat Treating Equipment Setters, Operators, and Tenders, Metal and Plastic --> Metal workers and plastic workers, nec
+		replace occ2010=8460 if occ2010==8340		 
+		* Shoe Machine Operators and Tenders --> Textile, Apparel, and Furnishings workers, nec
+		replace occ2010=9420 if occ2010==9230		 
+		* Railroad Brake, Signal, and Switch Operators --> Transportation workers, nec
 
 		gen kindocc = .
-
-		* Years from 1996 to 2002
-		replace kindocc=0 if (occ>=3&occ<=199) & (year>=1996&year<=2002)
-		replace kindocc=300 if (occ>=203&occ<=389) & (year>=1996&year<=2002)
-		replace kindocc=500 if (occ>=503&occ<=699) & (year>=1996&year<=2002)
-		replace kindocc=600 if (occ>=703&occ<=889) & (year>=1996&year<=2002)
-		replace kindocc=700 if (occ>=403&occ<=469) & (year>=1996&year<=2002)
-		replace kindocc=810 if (occ>=473&occ<=499) & (year>=1996&year<=2002)
-		replace kindocc=999 if (occ==0) & (year>=1996&year<=2002) /*Unknown*/
-		replace kindocc=1 if (occ>=900) & (year>=1996&year<=2002) /*Armed forces + Unemployed*/
-
-		* Years from 2003 to 2014
-		replace occ=occ/10 if occ>=0 & year>=2003
 		
-		replace kindocc=0 if (occ>=1&occ<=359) & year>=2003 
-		replace kindocc=300 if (occ>=500&occ<=599) & year>=2003
-		replace kindocc=400 if (occ>=470&occ<=499) & year>=2003
-		replace kindocc=500 if (occ>=612&occ<=983) & year>=2003
-		replace kindocc=700 if (occ>=360&occ<=469) & year>=2003
-		replace kindocc=810 if (occ>=600&occ<=611) & year>=2003
-		replace kindocc=999 if (occ==0) & year>=2003 /*Unknown*/
-		replace kindocc=1 if (occ>=984) & year>=2003 /*Armed forces*/
+		replace kindocc = 1 if occ2010>=10 & occ2010<=430
+		replace kindocc = 2 if occ2010>=500 & occ2010<=730
+		replace kindocc = 3 if occ2010>=800 & occ2010<=950
+		replace kindocc = 4 if occ2010>=1000 & occ2010<=1240
+		replace kindocc = 5 if occ2010>=1300 & occ2010<=1540
+		replace kindocc = 6 if occ2010>=1550 & occ2010<=1560
+		replace kindocc = 7 if occ2010>=1600 & occ2010<=1980
+		replace kindocc = 8 if occ2010>=2000 & occ2010<=2060
+		replace kindocc = 9 if occ2010>=2100 & occ2010<=2150
+		replace kindocc = 10 if occ2010>=2200 & occ2010<=2550
+		replace kindocc = 11 if occ2010>=2600 & occ2010<=2920
+		replace kindocc = 12 if occ2010>=3000 & occ2010<=3540
+		replace kindocc = 13 if occ2010>=3600 & occ2010<=3650
+		replace kindocc = 14 if occ2010>=3700 & occ2010<=3950
+		replace kindocc = 15 if occ2010>=4000 & occ2010<=4150
+		replace kindocc = 16 if occ2010>=4200 & occ2010<=4250
+		replace kindocc = 17 if occ2010>=4300 & occ2010<=4650
+		replace kindocc = 18 if occ2010>=4700 & occ2010<=4965
+		replace kindocc = 19 if occ2010>=5000 & occ2010<=5940
+		replace kindocc = 20 if occ2010>=6005 & occ2010<=6130
+		replace kindocc = 21 if occ2010>=6200 & occ2010<=6765
+		replace kindocc = 22 if occ2010>=6800 & occ2010<=6940
+		replace kindocc = 23 if occ2010>=7000 & occ2010<=7630
+		replace kindocc = 24 if occ2010>=7700 & occ2010<=8965
+		replace kindocc = 25 if occ2010>=9000 & occ2010<=9750
+		replace kindocc = 26 if occ2010>=9800 & occ2010<=9830
+		replace kindocc = 27 if occ2010==9920 
 		
+		label define kindocclbl 1 "Management in Business, Science, and Arts", add 
+		label define kindocclbl 2 "Business Operations Specialists", add 
+		label define kindocclbl 3 "Financial Specialists", add 
+		label define kindocclbl 4 "Computer and Mathematical", add 
+		label define kindocclbl 5 "Architecture and Engineering", add 
+		label define kindocclbl 6 "Technicians", add 
+		label define kindocclbl 7 "Life, Physical, and Social Science", add 
+		label define kindocclbl 8 "Community and Social Services", add 
+		label define kindocclbl 9 "Legal", add 
+		label define kindocclbl 10 "Education, Training, and Library", add 
+		label define kindocclbl 11 "Arts, Design, Entertainment, Sports, and Media", add 
+		label define kindocclbl 12 "Healthcare Practitioners and Technicians", add 
+		label define kindocclbl 13 "Healthcare Support", add 
+		label define kindocclbl 14 "Protective Service", add 
+		label define kindocclbl 15 "Food Preparation and Serving", add 
+		label define kindocclbl 16 "Building and Grounds Cleaning and Maintenance", add 
+		label define kindocclbl 17 "Personal Care and Service", add 
+		label define kindocclbl 18 "Sales and Related", add 
+		label define kindocclbl 19 "Office and Administrative Support", add 
+		label define kindocclbl 20 "Farming, Fisheries, and Forestry", add 
+		label define kindocclbl 21 "Construction", add 
+		label define kindocclbl 22 "Extraction", add 
+		label define kindocclbl 23 "Installation, Maintenance, and Repair", add 
+		label define kindocclbl 24 "Production", add 
+		label define kindocclbl 25 "Transportation and Material Moving", add 
+		label define kindocclbl 26 "Military", add 
+		label define kindocclbl 27 "Unemployed", add 
+		label values kindocc kindocclbl
 		label variable kindocc "Occupation"
-
-		gen collarocc=4 if kindocc>980 /*Unknown*/
-		gen collarocc=3 if kindocc==1 /*Armed forces*/
-		replace collarocc=2 if kindocc>=500 & kindocc<=980
-		replace collarocc=1 if kindocc>=2 & kindocc<=499
+		drop occ2010 
+		// Generating occupation categories
 		
-		label variable collarocc "Type of Job"
-		label define collarocclbl 1 "White-collar", add 
-		label define collarocclbl 2 "Blue-collar", add
-		label define collarocclbl 3 "Armed Forces", add
-		label define collarocclbl 4 "Unknown", add
-		label values collarocc collarocclbl
-	
 	* Wages *
 	
 		gen hours_worked = ahrsworkt if ahrsworkt != 999

@@ -42,7 +42,7 @@
 	 
 	 ***** Creating the GIS matchable MSA's list and the share of evacuees in 2006
 	 
-	collapse (mean) share_evac = evac kat_affected num_obs (sd) share_evac_sd = evac ///
+	collapse (mean) share_evac = evac kat_affected (sd) share_evac_sd = evac ///
 	    (count) obs = id [aw=weight], by(metcode2)
 	sort share_evac
 

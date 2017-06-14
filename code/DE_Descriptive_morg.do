@@ -32,7 +32,7 @@
 
 	matrix rownames output = age nohighsch highsch somecollege college black mexican nmhispan white other
 	
-	esttab matrix(output) using "../tables/descriptive_evac_vs_nevac_asec.tex", replace 
+	esttab matrix(output) using "../tables/descriptive_evac_vs_nevac_morg.tex", replace 
 	
 
  ***** Computing descriptives: labor status of treatment group, control group, and evacuees

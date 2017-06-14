@@ -9,8 +9,9 @@
   
  ***** Adding metcode2
  
-    merge m:m metarea using "../derived_morg/xwalk_msafips_cbsa.dta", ///
-	    keepusing(metcode2) nogen
+    merge m:1 metarea using "../derived_morg/xwalk_msafips_cbsa.dta", ///
+		  keepusing(metcode2) nogen keep(3)
+
   
  ***** Identifying Katrina affected areas 
 
@@ -46,7 +47,7 @@
 	// Keeping year 2006 (Hurricane Katrina), counting the number of obs. in each 
 	// metropolitan area and keeping the ones with more than 250 obs
 	
-	collapse (mean) share_evac = evac kat_affected num_obs (sd) share_evac_sd = evac ///
+	collapse (mean) share_evac = evac kat_affected (sd) share_evac_sd = evac ///
 	    (count) obs = id [aw=weight], by(metcode2)
 	sort share_evac
 	

@@ -68,7 +68,7 @@
 	replace metcode2 = 524 if city_id_morg == 314
 	replace metcode2 = 524 if city_id_morg == 313
 	replace metcode2 = 410 if city_id_morg == 258
-	replace metcode2 = 112 if city_id_morg == 262
+	replace metcode2 = 415 if city_id_morg == 262
 	replace metcode2 = 552 if city_id_morg == 338
 	replace metcode2 = 162 if city_id_morg == 92
 	replace metcode2 = 812 if city_id_morg == 461
@@ -89,9 +89,11 @@
 	replace metarea = cbsafips if missing(metarea)
 	
 	keep metcode2 metarea cbsafips city state1 state2 state3 state4
-
-	save "../derived_morg/xwalk_msafips_cbsa.dta", replace
 	
+	bysort metarea: keep if _n==1
+	
+	save "../derived_morg/xwalk_msafips_cbsa.dta", replace
+
   end
 
 ********************************************************************************
