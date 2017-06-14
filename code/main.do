@@ -144,7 +144,9 @@
 				
 		de_endogeneity
 		
-		de_household
+		de_household_asec
+		
+		de_household_morg
 		
 	*** Analysis
 		
