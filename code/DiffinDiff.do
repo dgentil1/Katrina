@@ -57,14 +57,14 @@
 	    outcomes(`outcome_vars') stub(`stub_list')
 	
 	local control_vars = "c.age c.age#c.age i.marital#i.sex i.marital i.sex i.educat " + ///
-		                 "i.ethnic i.workcat i.collarocc i.metcode2 i.year"
+		                 "i.ethnic i.workcat i.kindocc i.metcode2 i.year"
 
 	did_tables, data(../derived_asec/CPSASECfinal.dta) data_stub(asec) outcomes(`outcome_vars') controls(`control_vars')
 	did_tables, data(../derived_morg/MORGfinal.dta) data_stub(morg) outcomes(`outcome_vars') controls(`control_vars')
 
 	local education_titles = "High-School-Dropouts High-School Incomplete-College College"
 	local control_vars = "c.age c.age#c.age i.marital#i.sex i.marital i.sex " + ///
-		                 "i.ethnic i.workcat i.collarocc i.metcode2 i.year"
+		                 "i.ethnic i.workcat i.kindocc i.metcode2 i.year"
 	
 	forval i = 1/`number_education' {
 	    local education: word `i' of `education_levels'
