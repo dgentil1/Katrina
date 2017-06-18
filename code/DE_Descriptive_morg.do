@@ -5,7 +5,7 @@
 
   program define de_descriptive_morg
 	
- ***** Computing descriptives: demographic characteristics evacuees vs nonevacuees
+ ***** Computing descriptives: demographic characteristics evacuees vs. non-evacuees
  
  	use "../temp/MORG.dta", clear
  
@@ -30,8 +30,9 @@
 
 	mkmat evac_mean nevac_mean diff_mean se_diff_mean, matrix(output)
 
-	mat2txt, matrix(output) saving("../tables/descriptive_evac_vs_nevac_morg.txt") replace ///
-		  	 format(%20.5f) title(<tab:descriptive_morg>)
+	matrix rownames output = age nohighsch highsch somecollege college black mexican nmhispan white other
+	
+	esttab matrix(output) using "../tables/descriptive_evac_vs_nevac_morg.tex", replace 
 	
 
  ***** Computing descriptives: labor status of treatment group, control group, and evacuees
@@ -56,8 +57,9 @@
 	tabstat emplyd inactive unem hours_worked if (treat==1 & evac==1) [aw=weight], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 
-	mat2txt, matrix(output) saving("../tables/labor_status_sample_morg.txt") replace ///
-		  	 format(%20.5f) title(<tab:labor_status_sample_morg>)
+	matrix rownames output = All SE Treated SE Control SE Evacuues SE Treat_and_Evaccues SE
+
+	esttab matrix(output) using "../tables/labor_status_sample_morg.tex", replace 
 	
   end
 

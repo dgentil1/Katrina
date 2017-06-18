@@ -1,11 +1,11 @@
 
- *------------------- Reconciliating treatment assignment between MORG and ASEC ----------------*
+ *---------- Reconciliating treatment assignment between MORG and ASEC -------*
 
-  ***** Define Program 
+ ***** Define Program 
   
   program d_treatment_reconciliation
   
-    * prepare asec and morg
+ *** Prepare ASEC and MORG
   
     use "../derived_asec/CPSASECfinal.dta", clear
 	collapse share_evac treat treat_expanded control kat_affected, by(metcode2)
@@ -17,7 +17,7 @@
 	rename (share_evac treat treat_expanded control) =_morg
 	save "../derived_morg/metarea_list_morg.dta", replace
 	
-	* put treat informtion together and assign treatment
+ *** Put treat information together and assign treatment
 	
 	merge 1:1 metcode2 using "../derived_asec/metarea_list_asec.dta", nogen
 	
@@ -30,7 +30,7 @@
 	
 	save "../temp/treat_reconciliation.dta", replace
 	
-	* merge back to full data
+ *** Merge back to full dataset
 	
 	use "../derived_asec/CPSASECfinal.dta", clear
 		

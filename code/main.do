@@ -102,7 +102,8 @@
 		do "DE_Descriptive_asec.do"
 		do "DE_Descriptive_morg.do"
 		do "DE_Endogeneity.do"
-		do "DE_Household.do"
+		do "DE_Household_asec.do"
+		do "DE_Household_morg.do"
 		
 	 *** Treatment assignment reconciliation ASEC/MORG
 		do "D_Treatment_reconciliation.do"
@@ -144,7 +145,9 @@
 				
 		de_endogeneity
 		
-		de_household
+		de_household_asec
+		
+		de_household_morg
 		
 	*** Analysis
 		

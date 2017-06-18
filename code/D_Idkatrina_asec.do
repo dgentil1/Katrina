@@ -37,13 +37,13 @@
 
 	keep if year == 2006
 	bysort metcode2: gen num_obs=_N
-	// Keeping year 2006 (Hurricane Katrina), counting the number of obs. in each 
-	// metropolitan area and keeping the ones with more than 100 obs.
+	// Keeping year 2006 (Hurricane Katrina) and counting the number of obs. in each 
+	// metropolitan area.
 	 
 	 ***** Creating the GIS matchable MSA's list and the share of evacuees in 2006
 	 
-	collapse (mean) share_evac = evac kat_affected num_obs (sd) share_evac_sd = evac ///
-	    (count) obs = id [aw=weight], by(metcode2)
+	collapse (mean) share_evac = evac kat_affected (sd) share_evac_sd = evac ///
+	         (count) obs = id [aw=weight], by(metcode2)
 	sort share_evac
 
 	save "../derived_asec/lot_evac_list_to_match.dta", replace
@@ -78,7 +78,7 @@
 	
 	use "../temp/CPSASEC.dta", clear
 	
-	merge m:1 metcode2 using "../derived_asec/lot_evac_list.dta"
+	merge m:1 metcode2 using "../derived_asec/lot_evac_list.dta", nogen
 		
  ***** Save the dataset for SCM
 
