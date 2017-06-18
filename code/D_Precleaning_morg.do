@@ -49,13 +49,14 @@
 	
 		gen white = (race==1 & ethnic==8) | (race==1 & ethnic==9) | (race==1 & ethnic==.)
 		gen black = (race==2 & ethnic==8) | (race==2 & ethnic==9) | (race==2 & ethnic==.)
-		gen mexican = (ethnic==3) | (ethnic==1)
-		gen nmhispan = (ethnic!=8 & ethnic!=9 & ethnic!=3 & ethnic!=1)
+		gen mexican = (ethnic==1) | (ethnic==2) | (ethnic==3)
+		gen nmhispan = (ethnic!=8 & ethnic!=9 & ethnic!=3 & ethnic!=1 & ethnic!=2)
 		gen other = (white==0 & black==0 & mexican==0 & nmhispan==0)
 		// Identifying race
 		
 		drop ethnic
 		gen ethnic=1*(mexican==1)+2*(nmhispan==1)+3*(black==1)+4*(white==1)+5*(other==1)
+		replace ethnic = . if (ethnic!=1 & ethnic!=2 & ethnic!=3 & ethnic!=4 & ethnic!=5)
 		// Generating ethnicity categories
 
 		label var mexican "Mexican"
