@@ -53,7 +53,7 @@
 			   legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
 			   title(`stub_var', color(black) size(medium)) ///
 			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") ///
-			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(trend_`outcome_var',replace)
+			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(`sample'_trend_`outcome_var',replace)
 	}
 	
 	local number_outcomes: word count `outcomes'
@@ -73,7 +73,7 @@
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic""control (dashed line) in the period 1994-2014. The top figure shows the""graph for the logarithm of weekly wages, the figure in the middle shows it for""employment and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "../figures/alltrends_`city'.png", replace
+	graph export "../figures/`sample'_alltrends_`city'.png", replace
 
   end	
   
@@ -100,7 +100,7 @@
 			   xtitle("Year") legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
 			   title(`stub_var', color(black) size(medium)) ///
 			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") ///
-			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(trend_`outcome_var'`level',replace)
+			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(`sample'_trend_`outcome_var'`level',replace)
     }
 	
 	local number_outcomes: word count `outcomes'
@@ -118,7 +118,7 @@
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic control (dashed line)"" in the period 1994-2014. The top figure shows the graph for the""logarithm of weekly wages, the figure in the middle shows it for employment and the bottom figure for""inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "../figures/alltrends_`city'`level'.png", replace
+	graph export "../figures/`sample'_alltrends_`city'`level'.png", replace
 	
   end
 
