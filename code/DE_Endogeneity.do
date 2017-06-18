@@ -101,8 +101,8 @@ program define de_endogeneity
 	label var unem_5 "Average unemployment rate, last 5 years"
 	label var lr_w_wage_1 "Average log-weekly wage, last year"
 	label var lr_w_wage_5 "Average log-weekly wage, last 5 years"
-	label var share_evac_asec "Evacuees share (ASEC)"
-	label var share_evac_morg "Evacuees share (MORG)"
+	label var share_evac_asec "Evacuees (ASEC)"
+	label var share_evac_morg "Evacuees (MORG)"
 	label var treat_expanded "Treatment"
 	
 	eststo clear
