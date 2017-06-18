@@ -81,6 +81,9 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+
+\series bold
+\size large
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
@@ -93,8 +96,42 @@ Share of evacuees by MSA for MORG and ASEC
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset VSpace defskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+
+\series bold
+ASEC
+\end_layout
+
+\begin_layout Plain Layout
+\align center
 \begin_inset Graphics
-	filename ../../../../Evacuees_asec.pdf
+	filename Evacuees_asec.pdf
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+
+\series bold
+MORG
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename evacuees_morg.pdf
+	scale 40
 
 \end_inset
 
