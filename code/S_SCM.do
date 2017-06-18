@@ -18,14 +18,14 @@ program scm
 	local control_vars ="unem hours_worked " + ///
 		"sex white other black nmhispan mexican bluecol whitecol " + ///
 		"age"
-	foreach education in nohighsch highsch somecollege college{
+	foreach education in nohighsch highsch somecollege college {
 	    use "../derived_asec/CPSASECfinal.dta", clear
-		build_synth_control if `education' == 1, data("../derived_asec/CPSASECfinal.dta") sample(asec) ///
+	  	build_synth_control if `education' == 1, data("../derived_asec/CPSASECfinal.dta") sample(asec) ///
 		    outcomes(`outcome_vars') controls(`control_vars') city(houston) tr_period(2006) stub(_`education')
 	}
-	foreach education in nohighsch highsch somecollege college{
+	foreach education in nohighsch highsch somecollege college {
 	    use "../derived_morg/MORGfinal.dta", clear
-		build_synth_control if `education' == 1, data("../derived_morg/MORGfinal.dta") sample(morg) ///
+		  build_synth_control if `education' == 1, data("../derived_morg/MORGfinal.dta") sample(morg) ///
 		    outcomes(`outcome_vars') controls(`control_vars') city(houston) tr_period(2006) stub(_`education')
 	}
 end
@@ -101,6 +101,7 @@ program build_synth_control
 			merge 1:1 year using "../temp/`sample'_synth_`city'_`outcome_var'`stub'", nogen
 		}
 		save "../derived_`sample'/controltrends_`city'`stub'.dta", replace
+
 	restore
 	
 end

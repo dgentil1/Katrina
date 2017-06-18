@@ -11,7 +11,6 @@
  
     merge m:1 metarea using "../derived_morg/xwalk_msafips_cbsa.dta", ///
 		  keepusing(metcode2) nogen keep(3)
-
   
  ***** Identifying Katrina affected areas 
 
@@ -48,7 +47,7 @@
 	// metropolitan area and keeping the ones with more than 250 obs
 	
 	collapse (mean) share_evac = evac kat_affected (sd) share_evac_sd = evac ///
-	    (count) obs = id [aw=weight], by(metcode2)
+	         (count) obs = id [aw=weight], by(metcode2)
 	sort share_evac
 	
 	local upper_thresholds  "5 1"

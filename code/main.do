@@ -74,8 +74,8 @@
   ***** Paths
   
   *global code "Please insert here you working directory for code folder"
-  *global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
-  global code "/Users/marinabosque/Desktop/working_paper/code"
+  global code "C:\Users\dgentil1\Documents\Katrina\Katrina\code" 
+  *global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"
 	
    cd ${code}	
@@ -153,7 +153,7 @@
 		
 		scm
 		
-		*placebos
+		placebos
 		
 		pretrends
 		

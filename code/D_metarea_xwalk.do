@@ -58,7 +58,7 @@
 	
 	reclink city state1 state2 using "../temp/metarea_list_asec.dta", ///
 	        idmaster(city_id_morg) idusing(city_id_asec) gen(match_score) ///
-		    minscore(.6) _merge(match) uprefix(asec_)
+		      minscore(.6) _merge(match) uprefix(asec_)
 		
     replace metcode2 = 244 if city_id_morg == 147
 	replace metcode2 = 612 if city_id_morg == 362
