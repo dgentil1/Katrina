@@ -13,6 +13,7 @@
 	save "../derived_asec/metarea_list_asec.dta", replace
 
 	use "../derived_morg/MORGfinal.dta", clear
+	keep if cities_in_sample == 1 
 	collapse share_evac treat treat_expanded control, by(metcode2)
 	rename (share_evac treat treat_expanded control) =_morg
 	save "../derived_morg/metarea_list_morg.dta", replace

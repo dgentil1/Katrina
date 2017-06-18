@@ -113,7 +113,7 @@ program define de_endogeneity
 	eststo: reg share_evac_morg distance unem_1 lr_w_wage_1
 	eststo: reg share_evac_morg distance unem_5 lr_w_wage_5
 	
- 	esttab using "../tables/endogeneity.tex", r2 se nocons ///
+ 	esttab using "../tables/endogeneity.tex", r2 se nocons star(* 0.1 ** 0.05 *** 0.01) ///
 		   label compress replace width(2\hsize) title(Endogeneity of the treatment assignment)
 
   end  

@@ -74,6 +74,8 @@
 	gen control = (kat_affected == 0 & share_evac == 0)
 	// Generating control variable that flags metropolitan areas not affected by Katrina,
 	// that received an inflow of evacuees that is not statistically significant
+
+	gen cities_in_sample = 1
 	
 	save "../derived_morg/lot_evac_list.dta", replace
 	
