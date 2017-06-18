@@ -57,7 +57,7 @@
 	tabstat emplyd inactive unem hours_worked if (treat==1 & evac==1) [aw=weight], c(s) stat(mean semean) save
 	matrix output = (output\r(StatTotal))
 
-	matrix rownames output = All SE Treated SE Control SE Evacuues SE Treat_and_Evaccues SE
+	matrix rownames output = All SE Treated SE Control SE Evacuees SE Treat_and_Evacuees SE
 
 	esttab matrix(output) using "../tables/labor_status_sample_morg.tex", replace 
 	
