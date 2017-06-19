@@ -74,7 +74,7 @@
   ***** Paths
   
   *global code "Please insert here you working directory for code folder"
-  global code "C:\Users\dgentil1\Documents\New_repo\Katrina\code" 
+  global code "C:\Users\dgentil1\Desktop\Katrina\code" 
   *global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"
 	

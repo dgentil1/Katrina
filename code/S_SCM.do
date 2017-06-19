@@ -77,7 +77,7 @@ program build_synth_control
 			local lag5 = `tr_period' - 2
 			local lags = "`var'(`lag1') `var'(`lag2') `var'(`lag3') `var'(`lag4') `var'(`lag5')"
 			
-			synth `var' `controls' `lags', ///
+			qui synth `var' `controls' `lags', ///
 				trunit(`trunit') trperiod(`tr_period') figure ///
 				keep("../temp/`sample'_synth_`city'_`var'`stub'.dta", replace)
 
