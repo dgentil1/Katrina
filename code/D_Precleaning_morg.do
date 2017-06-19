@@ -209,11 +209,11 @@
 		// Generating occupation categories
 
 
-		gen bluecol = .	
+		gen bluecol = 0	
 		replace bluecol = 1 if (occ2010>=6000&occ2010<=9840)
 		replace bluecol = 1 if (occ2010>=3600&occ2010<=4690)
 
-		gen whitecol = .	
+		gen whitecol = 0	
 		replace whitecol = 1 if (occ2010>=10&occ2010<=3590)
 		replace whitecol = 1 if (occ2010>=4700&occ2010<=5990)
 		// Identifying white collars and blue collars								 
