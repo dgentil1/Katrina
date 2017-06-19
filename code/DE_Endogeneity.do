@@ -32,6 +32,8 @@ program define de_endogeneity
 	
 	use "../derived_asec/CPSASECfinal.dta", clear
 	
+	keep if cities_in_sample == 1
+	
     preserve
 		keep if year==2005
 		collapse (mean) lr_w_wage_1 = lr_w_wage lr_h_wage_1 = lr_h_wage unem_1 = unem [pw=weight], by(metcode2)
@@ -61,6 +63,8 @@ program define de_endogeneity
  *** MORG
 	
     use "../derived_morg/MORGfinal.dta", clear
+	
+	keep if cities_in_sample == 1
 	
     preserve
 		keep if year==2005

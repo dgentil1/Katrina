@@ -14,7 +14,7 @@
 
 	use "../derived_morg/MORGfinal.dta", clear
 	keep if cities_in_sample == 1 
-	collapse share_evac treat treat_expanded control, by(metcode2)
+	collapse share_evac treat treat_expanded control cities_in_sample, by(metcode2)
 	rename (share_evac treat treat_expanded control) =_morg
 	save "../derived_morg/metarea_list_morg.dta", replace
 	
@@ -36,14 +36,14 @@
 	use "../derived_asec/CPSASECfinal.dta", clear
 		
 	merge m:1 metcode2 using "../temp/treat_reconciliation.dta", nogen ///
-	    keepusing(treat treat_expanded control)
+	    keepusing(treat treat_expanded control cities_in_sample) keep(3)
 	
 	save "../derived_asec/CPSASECfinal.dta", replace
 	
     use "../derived_morg/MORGfinal.dta", clear
 		
 	merge m:1 metcode2 using "../temp/treat_reconciliation.dta", nogen ///
-	    keepusing(treat treat_expanded control)
+	    keepusing(treat treat_expanded control cities_in_sample) keep(3)
 	
 	save "../derived_morg/MORGfinal.dta", replace
 

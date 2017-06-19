@@ -68,7 +68,7 @@
 	
 	local outcome1: word 1 of `outcomes' 	
 	
-	grc1leg `plots', rows(3) legendfrom(trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
+	grc1leg `plots', rows(3) legendfrom(`sample'_trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
 		   graphregion(color(white)) title({bf: `sample_legend' outcome time trends}, color(black) size(small)) ///
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic""control (dashed line) in the period 1994-2014. The top figure shows the""graph for the logarithm of weekly wages, the figure in the middle shows it for""employment and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
