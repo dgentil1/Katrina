@@ -60,15 +60,15 @@
 	
 	forval i = 1/`number_outcomes' {
 		local outcome_var: word `i' of `outcomes'
-		local plots = "`plots' " + "trend_`outcome_var'"
+		local plots = "`plots' " + "`sample'_trend_`outcome_var'"
 	}
 	
 	local city_legend = proper("`city'")
 	local sample_legend = upper("`sample'")
 	
-	local outcome1: word 1 of `outcomes' 	
+	local plot1: word 1 of `plots' 	
 	
-	grc1leg `plots', rows(3) legendfrom(`sample'_trend_`outcome1') position(6) /// /* cols(1) or cols(3) */
+	grc1leg `plots', rows(3) legendfrom(`plot1') position(6) /// /* cols(1) or cols(3) */
 		   graphregion(color(white)) title({bf: `sample_legend' outcome time trends}, color(black) size(small)) ///
 		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic""control (dashed line) in the period 1994-2014. The top figure shows the""graph for the logarithm of weekly wages, the figure in the middle shows it for""employment and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
 		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
@@ -108,7 +108,7 @@
 
 	forval i = 1/`number_outcomes' {
 		local outcome_var: word `i' of `outcomes'
-		local plots = "`plots' " + "trend_`outcome_var'`level'"
+		local plots = "`plots' " + "`sample'_trend_`outcome_var'`level'"
 	}
 	
 	local plot1: word 1 of `plots' 	
