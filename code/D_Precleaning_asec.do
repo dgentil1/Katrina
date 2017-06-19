@@ -185,7 +185,6 @@
 		label define kindocclbl 27 "Unemployed", add 
 		label values kindocc kindocclbl
 		label variable kindocc "Occupation"
-		drop occ2010 
 		// Generating occupation categories
 
 		gen bluecol = .	

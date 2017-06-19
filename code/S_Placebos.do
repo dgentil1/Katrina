@@ -132,7 +132,7 @@
 			
 		}
 		
-		twoway `lp' || line `city' years, ///
+		qui twoway `lp' || line `city' years, ///
 			   lcolor(navy) lwidth(thick) legend(off) xline(2005, lcolor(black) lpattern(dot)) ///
 			   title("`stub_var'", color(black) size(medium)) name(placebo_`var'`level',replace) ///
 			   bgcolor(white) graphregion(color(white)) xtitle("Year") ///

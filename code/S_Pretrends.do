@@ -47,7 +47,7 @@
 		local vertical = `tr_period' - 1
 		local city_legend = proper("`city'")
 		
-		twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
+		qui twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
 			   (line synthetic_`city'_`outcome_var' year, lpattern(dash) lcolor(black)), xtitle("Year") ///
 			   ytitle("`stub_var'") xline(`vertical', lcolor(black) lpattern(dot)) ///
 			   legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
@@ -94,7 +94,7 @@
 		local vertical = `tr_period' - 1
 		local city_legend = proper("`city'")
 		
-		twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
+		qui twoway (line `city'_`outcome_var' year, lcolor(navy) lwidth(thick)) ///
 			   (line synthetic_`city'_`outcome_var' year, lpattern(dash) lcolor(black)), ///
 			   ytitle("`stub_var'") xline(`vertical', lcolor(black) lpattern(dot)) ///
 			   xtitle("Year") legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///

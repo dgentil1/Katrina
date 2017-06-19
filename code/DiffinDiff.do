@@ -189,7 +189,7 @@
 		local var: word `i' of `outcomes'
 		local stub_var: word `i' of `stub'
 
-		twoway (line `var' year if treat_expanded == 1) ///
+		qui twoway (line `var' year if treat_expanded == 1) ///
 	           (line `var' year if control == 1), legend(label(1 "Treatment") label(2 "Control")) ///
 			   xtitle("Year") ytitle("`stub_var'") title("`stub_var'", color(black) size(medium)) graphregion(color(white)) bgcolor(white) name(check_`var'`educ_level', replace) ///
 			   xline(2006, lcolor(black) lpattern(dot)) xtitle("Year") ylabel(#3) ///
