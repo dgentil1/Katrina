@@ -103,29 +103,6 @@
 		label var emplyd "Employment"
 		label var unem "Unemployment"
 	
-	* Industry *
-	
-		gen bluecol=0
-		replace bluecol=. if ind80==. | ind02==.
-		replace bluecol=1 if (ind80>=10 & ind80<=691) | (ind02>=170 & ind02<=6780)
-		replace bluecol=1 if (ind80==991) | (ind02==9890) /* Armed Forces + Unemployed*/
-		
-		gen whitecol=0
-		replace whitecol=. if (ind80==. | ind02==.)		
-		replace whitecol=1 if (ind80>=700 & ind80<=932) | (ind02>=6870 & ind02<=9590)
-		// Identifying white collars and blue collars
-		
-		gen workcat=1*(bluecol==1)+2*(whitecol==1)
-		replace workcat=. if (bluecol==.&whitecol==.)
-		// Generating working categories
-	
-		label var bluecol "Blue-collar"
-		label var whitecol "White-collar"
-		label var workcat "Work categories"
-
-		label define lblworkcat 1 "Blue-collar" 2 "White-collar" 
-		label values workcat lblworkcat
-	
 	* Occupation *
 		
 		preserve
@@ -231,7 +208,27 @@
 		label variable kindocc "Occupation"
 		drop occ2010 
 		// Generating occupation categories
+
+
+		gen bluecol = .	
+		replace bluecol = 1 if (occ2010>=6000&occ2010<=9840)
+		replace bluecol = 1 if (occ2010>=3600&occ2010<=4690)
+
+		gen whitecol = .	
+		replace whitecol = 1 if (occ2010>=10&occ2010<=3590)
+		replace whitecol = 1 if (occ2010>=4700&occ2010<=5990)
+		// Identifying white collars and blue collars								 
+								 
+		gen workcat=1*(bluecol==1)+2*(whitecol==1)
+		// Generating working categories
 	
+		label var bluecol "Blue-collar"
+		label var whitecol "White-collar"
+		label var workcat "Work categories"
+
+		label define lblworkcat 0 "Unemployed" 1 "Blue-collar" 2 "White-collar" 
+		label values workcat lblworkcat
+
 	* Wages *
 	
 		gen hours_worked = uhourse
