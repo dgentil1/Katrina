@@ -35,7 +35,7 @@
 	esttab matrix(output) using "../tables/descriptive_evac_vs_nevac_morg.tex", replace 
 	
 
- ***** Computing descriptives: labor status of treatment group, control group, and evacuees
+ ***** Computing descriptives: labor status of the entire sample, treatment group, control group, and evacuees
 	
 	use "../derived_morg/MORGfinal.dta", clear
 	

@@ -101,11 +101,11 @@ program define de_endogeneity
  *** Compute regressions
 			
 	label var distance "Distance to New Orleans"
-	label var unem_1 "Average unemployment rate, last year"
-	label var unem_5 "Average unemployment rate, last 5 years"
+	label var unem_1 "Average unemployment share, last year"
+	label var unem_5 "Average unemployment share, last 5 years"
 	label var lr_w_wage_1 "Average log-weekly wage, last year"
 	label var lr_w_wage_5 "Average log-weekly wage, last 5 years"
-	label var share_evac_asec "Evacuees share(ASEC)"
+	label var share_evac_asec "Evacuees share (ASEC)"
 	label var share_evac_morg "Evacuees share (MORG)"
 	label var treat_expanded "Treatment"
 	
