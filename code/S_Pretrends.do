@@ -1,5 +1,5 @@
  
- *-------- Constructing pre-trends of the outcome variables (ASEC) -----------*
+ *---- Constructing pre-trends of the outcome variables (ASEC and MORG) -------*
 
   ***** Define Program 
 
