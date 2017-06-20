@@ -99,9 +99,9 @@
 		// Identifying employed, unemployed and inactive
 		  // We consider armed forces as employed
 		
-		label var inactive "Inactive"
-		label var emplyd "Employment"
-		label var unem "Unemployment"
+		label var inactive "Inactivity Share"
+		label var emplyd "Employment Share"
+		label var unem "Unemployment Share"
 	
 	* Occupation *
 		

@@ -120,8 +120,8 @@
 	gen postkat_short = (year == 2006 | year == 2007 | year == 2008)
 	replace postkat_short = . if year > 2008
 	gen did_`city'_short = postkat_short*`city'
-	label variable postkat_short "Post"
-	label variable did_`city'_short "Post x `city_legend'"
+	label variable postkat_short "Post-Katrina"
+	label variable did_`city'_short "Post-Katrina x `city_legend'"
 
   end	
 
@@ -230,14 +230,14 @@
 	} 
 	
 	gen did_treat=postkat*treat_expanded
-	label variable postkat "Post"
-	label variable did_treat "Post x Treatment"
+	label variable postkat "Post-Katrina"
+	label variable did_treat "Post-Katrina x Treatment"
 	
 	gen postkat_short = (year == 2006 | year == 2007 | year == 2008)
 	replace postkat_short = . if year > 2008
 	gen did_treat_short = postkat_short*treat_expanded
-	label variable postkat_short "Post"
-	label variable did_treat_short "Post x Treatment"
+	label variable postkat_short "Post-Katrina"
+	label variable did_treat_short "Post-Katrina x Treatment"
 	
 	eststo clear
 	
@@ -252,7 +252,7 @@
 
 	esttab using "../tables/diffindiff`data_stub'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`data_legend' `educ_stub' Diff-in-Diff for Treatment vs Control Group, CPS `data_legend' Sample \label{tab5}) keep(treat_expanded postkat did_treat) ///
-		   mtitles("Log Wage" "Employment Rate" "Inactivity")   ///
+		   mtitles("Log Wage" "Employment Share" "Inactivity Share")   ///
 		   addnote("{Note:} Observations are weighted using CPS weights, robust standard errors in parentheses" "are clustered at the metropolitan area level. We include individual level covariates (age," "age-squared, sex,marital status, the interaction of sex and marital status, education, ethnicity, industry and occupation)." "We also use year and metropolitan area fixed effects." "Source: CPS March Supplement 1996 - 2014.")
 	   
 	eststo clear
@@ -266,7 +266,7 @@
 
 	esttab using "../tables/short_diffindiff`data_stub'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`data_legend' `educ_stub' Short term Diff-in-Diff for Treatment vs Control Group, CPS `data_legend' Sample \label{tab5}) keep(treat_expanded postkat_short did_treat_short) ///
-		   mtitles("Log Wage" "Employment Rate" "Inactivity")   ///
+		   mtitles("Log Wage" "Employment Share" "Inactivity Share")   ///
 		   addnote("{Note:} Observations are weighted using CPS weights, robust standard errors in parentheses" "are clustered at the metropolitan area level. We include individual level covariates (age," "age-squared, sex,marital status, the interaction of sex and marital status, education, ethnicity, industry and occupation)." "We also use year and metropolitan area fixed effects." "Source: CPS March Supplement 1996 - 2014.")
 	   
   end

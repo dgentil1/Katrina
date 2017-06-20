@@ -6,53 +6,33 @@
  ///////////////////////////////////////////////////////////////////////////////////
  ///                                                                             ///
  ///  This main program and all its subordinated files include all the code      ///
- ///  that is needed to replicate the results in "The effects of a labor supply  ///
- ///  shock: evidence from Hurricane Katrina evacuees using the Synthetic        ///
- ///  Control Method by D. Alimonti, M. Bosque Mercader, D. Gentile Passaro      ///
- ///                                                                             ///
+ ///  that is needed to replicate the results in "The effects of a labor supply  ///  
+ ///  shock: \\ evidence from Hurricane Katrina evacuees" by D. Alimonti,        ///
+ ///  D. Gentile Passaro, and M. Bosque Mercader.								 ///
  ///  HOW TO USE: The following are the main instructions to use this program.   ///
  ///                                                                             ///
- ///  1) Set the relevant paths in your computer. You need to provide:		 	 ///
- ///	code     	      -> working directory for code folder					 ///
- ///																			 ///
- ///	raw     	      -> subfolder where data sets are stored              	 ///
- ///     	      		 
- ///										 									 ///
- ///    gis				  -> subfolder where gis data sets are stored				 ///
- ///     layers			  -> subfolder where layers data are stored				 ///
- ///   																			 ///
- ///    derived_asec      -> subfolder where worked data are stored    			 ///
- ///           
- ///                                                                          	 ///
- ///    figures           -> subfolder where figures are stored					 ///
- ///										 									 ///
- ///    tables            -> subfolder where tables are stored					 ///
- ///																			 ///
- ///    temp              -> subfolder where temporary files are stored			 ///
+ ///  1) Set the directory in your computer. You need to provide the path where	 ///
+ ///	 the folder code is going to be located:		 	 	 				 ///
+ ///		code  -> working directory for code folder			 			 	 ///
+ ///  																			 ///
+ ///  2) Folders to create at the same level as the code folder:				 ///
+ ///		code  -> folder where the dofiles are stored			 			 ///
+ ///		raw  -> folder where the raw datasets are stored			 		 ///
+ ///		gis  -> folder where gis data is stored			 					 ///
+ ///		derived_asec  -> folder where the derived files from ASEC code are	 ///
+ ///						 stored												 ///
+ ///		derived_asec  -> folder where the derived files from MORG code are	 ///
+ ///						 stored												 ///
+ ///		temp  -> folder where the temporary files form ASEC and MORG are 	 ///
+ ///				 stored														 ///
+ ///		figures  -> folder where figures are stored			 			 	 ///
+ ///		tables  -> folder where tables are stored			 			 	 ///
+ ///  																			 ///
+ ///  2) Reading the global variable with the path to code and the dofiles		 /// 
+ ///     that contain all the programs. Then, execute the programs.     		 ///
  ///                                                                             ///
- ///  2) After reading the global variable with the path to code, and the programs in  ///
- ///     each of the subordinate files, you need to run each of the programs     ///
- ///	 for the pieces you would like to replicate. These calls are included    ///
- ///     at the end of this main file. You can comment or uncomment as needed.   ///
- ///                                                                             ///
- ///  3) The programs are:                                                       ///
- ///	datafix   -> ***							     						 ///  
- ///    synth     -> *** 													     ///
- ///    did       -> ***						 								 ///
- ///                                                                             ///
- ///  4) There are also auxiliary programs called by the four above:             /// // check this number at the end!!!
- ///   a) Called by datafix                                                      ///
- ///      d_precleaning														     ///
- ///      d_idkatrina										 					 /// 
- ///      d_descriptive										 					 /// 
- ///      d_endogeneity															 ///
- ///   b) Called by synth	                                                     ///
- ///      s_scm																     ///
- ///      s_pretrends										 					 /// 
- ///      s_placebos															 ///
-
  ///  This version:                                                              ///
- ///  May 2017. @ D. Alimonti, M. Bosque Mercader, D. Gentile Passaro, 2017.     ///
+ ///  June 2017. @ D. Alimonti, M. Bosque Mercader, D. Gentile Passaro, 2017.    ///
  ///                                                                             ///
  ///////////////////////////////////////////////////////////////////////////////////
 
@@ -74,8 +54,8 @@
   ***** Paths
   
   *global code "Please insert here you working directory for code folder"
-  global code "C:\Users\dgentil1\Desktop\Katrina\code" 
-  *global code "/Users/marinabosque/Desktop/working_paper/code"
+  *global code "C:\Users\dgentil1\Desktop\Katrina\code" 
+  global code "/Users/marinabosque/Desktop/working_paper/code"
   *global code "/Users/Daniele/Desktop/working_paper/code"
 	
    cd ${code}	
