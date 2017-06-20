@@ -1,5 +1,5 @@
  
- *----------------- Building Synthetic Control Method (ASEC) -----------------*
+ *------------- Building Synthetic Control Method (ASEC and MORG) -------------*
 
   ***** Define Program 
 
