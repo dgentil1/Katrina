@@ -14,9 +14,7 @@
 	
 	grc1leg asec_alltrends_houston.gph morg_alltrends_houston.gph, ///
 	       cols(2) legendfrom(asec_alltrends_houston.gph) position(6) /// 
-		   graphregion(color(white)) ///
-		   note("{it:Note:} Each figure shows the outcome variable for Houston (blue solid line)and Synthetic control (dashed line) in the period""1994-2014. The top figure shows thegraph for the logarithm of weekly wages, the figure in the middle shows it for employment""and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
-		   size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+		   graphregion(color(white))
 	graph display, ysize(5) xsize(6.5)
 	graph export "../figures/alltrends_houston.png", replace
 	
@@ -40,9 +38,7 @@
 		local education_title: word `i' of `education_titles'
 		grc1leg asec_alltrends_houston_`education_level'.gph morg_alltrends_houston_`education_level'.gph, ///
 		    cols(2) legendfrom(asec_alltrends_houston_`education_level'.gph) position(6) ///
-			graphregion(color(white)) ///
-			note("{it:Note:} Each figure shows the outcome variable for Houston (blue solid line)and Synthetic control (dashed line) in the period""1994-2014. The top figure shows thegraph for the logarithm of weekly wages, the figure in the middle shows it for employment""and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
-		    size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+			graphregion(color(white))
 		graph display, ysize(5) xsize(6.5)
 		graph export "../figures/alltrends_houston_`education_level'.png", replace
 		}
