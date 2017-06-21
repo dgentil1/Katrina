@@ -10,7 +10,15 @@
 	local stub_list = "Log-wage Employment Inactivity"
 	
 	s_pre_scm, outcomes(`outcome_vars') sample(asec) city(houston) tr_period(2006) stub(`stub_list')	
-	s_pre_scm, outcomes(`outcome_vars') sample(morg) city(houston) tr_period(2006) stub(`stub_list')	
+	s_pre_scm, outcomes(`outcome_vars') sample(morg) city(houston) tr_period(2006) stub(`stub_list')
+	
+	grc1leg asec_alltrends_houston.gph morg_alltrends_houston.gph, ///
+	       cols(2) legendfrom(asec_alltrends_houston.gph) position(6) /// 
+		   graphregion(color(white)) ///
+		   note("{it:Note:} Each figure shows the outcome variable for Houston (blue solid line)and Synthetic control (dashed line) in the period""1994-2014. The top figure shows thegraph for the logarithm of weekly wages, the figure in the middle shows it for employment""and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
+		   size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+	graph display, ysize(5) xsize(6.5)
+	graph export "../figures/alltrends_houston.png", replace
 	
 	local education_levels = "nohighsch highsch somecollege college"
 	
@@ -27,6 +35,17 @@
 		    stub(`stub_list') level(_`education') title(`education_title')	
 	}
 	
+	forval i = 1/4 {
+		local education_level: word `i' of `education_levels'
+		local education_title: word `i' of `education_titles'
+		grc1leg asec_alltrends_houston_`education_level'.gph morg_alltrends_houston_`education_level'.gph, ///
+		    cols(2) legendfrom(asec_alltrends_houston_`education_level'.gph) position(6) ///
+			graphregion(color(white)) ///
+			note("{it:Note:} Each figure shows the outcome variable for Houston (blue solid line)and Synthetic control (dashed line) in the period""1994-2014. The top figure shows thegraph for the logarithm of weekly wages, the figure in the middle shows it for employment""and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
+		    size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+		graph display, ysize(5) xsize(6.5)
+		graph export "../figures/alltrends_houston_`education_level'.png", replace
+		}
   end
 
 *-------------------------------- Pretrends SCM -------------------------------*
@@ -53,7 +72,7 @@
 			   legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
 			   title(`stub_var', color(black) size(medium)) ///
 			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") ///
-			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(`sample'_trend_`outcome_var',replace)
+			   xscale(range(1996 2014)) ylabel(#2) graphregion(color(white)) bgcolor(white) name(`sample'_trend_`outcome_var',replace)
 	}
 	
 	local number_outcomes: word count `outcomes'
@@ -69,12 +88,9 @@
 	local plot1: word 1 of `plots' 	
 	
 	grc1leg `plots', rows(3) legendfrom(`plot1') position(6) /// /* cols(1) or cols(3) */
-		   graphregion(color(white)) title({bf: `sample_legend' outcome time trends}, color(black) size(small)) ///
-		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic""control (dashed line) in the period 1994-2014. The top figure shows the""graph for the logarithm of weekly wages, the figure in the middle shows it for""employment and the bottom figure for inactivity. The vertical line is depicted for year 2005.", ///
-		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
+		   graphregion(color(white)) title({bf: `sample_legend'}, color(black) size(small))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "../figures/`sample'_alltrends_`city'.png", replace
-
+	graph save `sample'_alltrends_houston.gph, replace
   end	
   
 *------------------------ Pretrends SCM (Education) ---------------------------*
@@ -100,7 +116,7 @@
 			   xtitle("Year") legend(label(1 `city_legend') label(2 "Synthetic `city_legend'")) ///
 			   title(`stub_var', color(black) size(medium)) ///
 			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") ///
-			   xscale(range(1996 2014)) ylabel(#3) graphregion(color(white)) bgcolor(white) name(`sample'_trend_`outcome_var'`level',replace)
+			   xscale(range(1996 2014)) ylabel(#2) graphregion(color(white)) bgcolor(white) name(`sample'_trend_`outcome_var'`level',replace)
     }
 	
 	local number_outcomes: word count `outcomes'
@@ -114,12 +130,9 @@
 	local plot1: word 1 of `plots' 	
 	
 	grc1leg `plots', rows(3) legendfrom(`plot1') position(6) /// /* cols(1) or cols(3) */
-		   graphregion(color(white)) title({bf:`title' - `sample_legend' outcome time trends}, color(black) size(small)) ///
-		   note("{it:Note:} Each figure shows the outcome variable for `city_legend' (blue solid line)and Synthetic control (dashed line)"" in the period 1994-2014. The top figure shows the graph for the""logarithm of weekly wages, the figure in the middle shows it for employment and the bottom figure for""inactivity. The vertical line is depicted for year 2005.", ///
-		   size(vsmall)) caption("{it:Source:} CPS March Supplement 1996 - 2014.", size(vsmall))
+		   graphregion(color(white)) title({bf: `sample_legend'}, color(black) size(small))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "../figures/`sample'_alltrends_`city'`level'.png", replace
-	
+	graph save `sample'_alltrends_houston`level'.gph, replace	
   end
 
 ********************************************************************************     

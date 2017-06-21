@@ -55,13 +55,20 @@
 	    outcomes(`outcome_vars') stub(`stub_list')
     did_pretrends, data(../derived_morg/MORGfinal.dta) data_stub(morg) ///
 	    outcomes(`outcome_vars') stub(`stub_list')
+		
+    grc1leg checkslong_asec.gph checkslong_morg.gph, cols(2) legendfrom(checkslong_asec.gph) position(6) /// 
+		   graphregion(color(white)) ///
+		   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line) and control group (red line) across""time. The vertical line, representing the beginning of the post-treatment period, is depicted for the year 2005. The top""figure shows the graph for the logarithm of weekly wages, the figure in the middle shows it for the employment and the""bottom figure for inactivity.", ///
+		   size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+	graph display, ysize(5) xsize(6.5)
+	graph export "../figures/checkslong.png", replace	
 	
 	local control_vars = "c.age c.age#c.age i.marital#i.sex i.marital i.sex i.educat " + ///
 		                   "i.ethnic i.workcat i.kindocc i.metcode2 i.year"
 
 	did_tables, data(../derived_asec/CPSASECfinal.dta) data_stub(asec) outcomes(`outcome_vars') controls(`control_vars')
 	did_tables, data(../derived_morg/MORGfinal.dta) data_stub(morg) outcomes(`outcome_vars') controls(`control_vars')
-
+	
 	local education_titles = "High-School-Dropouts High-School Incomplete-College College"
 	local control_vars = "c.age c.age#c.age i.marital#i.sex i.marital i.sex " + ///
 		                   "i.ethnic i.workcat i.kindocc i.metcode2 i.year"
@@ -80,6 +87,20 @@
 		did_tables, data(../derived_morg/MORGfinal.dta) data_stub(morg) ///
 		    outcomes(`outcome_vars') controls(`control_vars') educ_level(`education') educ_stub(`education_title')
 	}
+	
+		local education_titles = "High-School-Dropouts High-School Incomplete-College College"
+	local education_levels = "nohighsch highsch somecollege college"
+
+	forval i = 1/4 {
+		local education_level: word `i' of `education_levels'
+		local education_title: word `i' of `education_titles'
+		grc1leg checkslong_asec`education_level'.gph checkslong_morg.gph, cols(2) legendfrom(checkslong_asec`education_level'.gph) position(6) /// 
+			   graphregion(color(white)) ///
+			   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line) and control group (red line) across""time. The vertical line, representing the beginning of the post-treatment period, is depicted for the year 2005. The top""figure shows the graph for the logarithm of weekly wages, the figure in the middle shows it for the employment and the""bottom figure for inactivity.", ///
+		       size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+		graph display, ysize(5) xsize(6.5)
+		graph export "../figures/checkslong_`education_level'.png", replace
+		}
 
   end  
 
@@ -192,7 +213,7 @@
 		qui twoway (line `var' year if treat_expanded == 1) ///
 	           (line `var' year if control == 1), legend(label(1 "Treatment") label(2 "Control")) ///
 			   xtitle("Year") ytitle("`stub_var'") title("`stub_var'", color(black) size(medium)) graphregion(color(white)) bgcolor(white) name(check_`var'`educ_level', replace) ///
-			   xline(2006, lcolor(black) lpattern(dot)) xtitle("Year") ylabel(#3) ///
+			   xline(2006, lcolor(black) lpattern(dot)) xtitle("Year") ylabel(#2) ///
 			   xlabel(1996 "96" 1998 "98" 2000 "00" 2002 "02" 2004 "04" 2006 "06" 2008 "08" 2010 "10" 2012 "12" 2014 "14") xscale(range(1996 2014))
 		
 		local plots = "`plots' " + "check_`var'`educ_level'"
@@ -202,12 +223,9 @@
 	local data_legend = upper("`data_stub'")
 
 	grc1leg `plots', rows(3) legendfrom(check_`outcome1'`educ_level') position(6) /// 
-		   graphregion(color(white)) title({bf:`data_legend' `educ_stub' outcome time trends}, color(black) size(small)) ///
-		   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line)""and control group (red line) across time. The vertical line, representing the beginning of the""post-treatment period, is depicted for the year 2005. The top figure shows the graph for the logarithm of""weekly wages, the figure in the middle shows it for the employment and the bottom figure for inactivity.", size(vsmall)) ///
-		   caption("{it:Source:} CPS `data_legend' 1996 - 2014.", size(vsmall))
+		   graphregion(color(white)) title({bf:`data_legend'}, color(black) size(small))
 	graph display, ysize(8.5) xsize(6.5)
-	graph export "../figures/checkslong`data_stub'_`educ_level'.png", replace
-
+	graph save checkslong_`data_stub'`educ_level'.gph, replace
   end
 
 *-------------------------------- DiD: Tables ---------------------------------*

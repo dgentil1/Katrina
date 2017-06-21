@@ -8,14 +8,16 @@
  *** Prepare ASEC and MORG
   
     use "../derived_asec/CPSASECfinal.dta", clear
-	collapse share_evac treat treat_expanded control kat_affected, by(metcode2)
-	rename (share_evac treat treat_expanded control) =_asec
+	collapse share_evac share_evac_sd obs treat treat_expanded control kat_affected, by(metcode2)
+	gen share_evac_se = share_evac_sd / obs
+	rename (share_evac share_evac_sd share_evac_se obs treat treat_expanded control) =_asec
 	save "../derived_asec/metarea_list_asec.dta", replace
 
 	use "../derived_morg/MORGfinal.dta", clear
 	keep if cities_in_sample == 1 
-	collapse share_evac treat treat_expanded control cities_in_sample, by(metcode2)
-	rename (share_evac treat treat_expanded control) =_morg
+	collapse share_evac share_evac_sd obs treat treat_expanded control cities_in_sample, by(metcode2)
+	gen share_evac_se = share_evac_sd / obs
+	rename (share_evac share_evac_sd share_evac_se obs treat treat_expanded control) =_morg
 	save "../derived_morg/metarea_list_morg.dta", replace
 	
  *** Put treat information together and assign treatment
@@ -29,6 +31,9 @@
 	gen control = 1 if control_asec == 1 & control_morg == 1
 	replace control = 0 if control_asec == 0 & control_morg == 0
 	
+	
+	*** We should create table 3 here ****
+	
 	save "../temp/treat_reconciliation.dta", replace
 	
  *** Merge back to full dataset
@@ -37,6 +42,8 @@
 		
 	merge m:1 metcode2 using "../temp/treat_reconciliation.dta", nogen ///
 	    keepusing(treat treat_expanded control cities_in_sample) keep(3)
+	
+	drop if missing(cities_in_sample)
 	
 	save "../derived_asec/CPSASECfinal.dta", replace
 	

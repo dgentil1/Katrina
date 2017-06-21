@@ -1,4 +1,5 @@
-
+raw/
+*.gph
 *.dta
 *.png
 tables/
@@ -6,4 +7,3 @@ figures/
 temp/
 derived_morg/
 derived_asec/
-raw/

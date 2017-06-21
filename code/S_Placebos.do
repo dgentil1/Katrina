@@ -17,6 +17,13 @@
 		s_plac_plots, data_stub(`samples') outcomes(`outcome_vars') controls(`control_vars') stub(`stub_list') city(houston)
 	}
 	
+	graph combine asec_placebohouston.gph morg_placebohouston.gph, cols(2) ///
+	       graphregion(color(white)) ///
+		   note("{it:Note:} Each graph reports the difference in the outcome variable between treated group and synthetic control, assuming a""treatment in 2005, for 86 metropolitan areas. The bold blue line represents `city_stub' and the grey lines represent the other""metropolitan areas in the control group. The top figure shows the graph for the logarithm of weekly wages, the figure""in the middle shows it for the employment and the bottom figure for inactivity.", ///
+		   size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+	graph display, ysize(5) xsize(6.5)
+	graph export "../figures/placebo_houston.png", replace
+	
    local control_vars = "unem hours_worked " + ///
 		"sex white other black nmhispan mexican bluecol whitecol " + ///
 		"age"
@@ -37,6 +44,17 @@
 				stub(`stub_list') city(houston) level(_`education') title(`education_title')
 		}
 	}
+	
+	forval i = 1/4 {
+		local education_level: word `i' of `education_levels'
+		local education_title: word `i' of `education_titles'
+	    graph combine asec_placebo_`education_level'houston.gph morg_placebo_`education_level'houston.gph, cols(2) ///
+			  graphregion(color(white)) ///
+		      note("{it:Note:} Each graph reports the difference in the outcome variable between treated group and synthetic control, assuming a""treatment in 2005, for 86 metropolitan areas. The bold blue line represents `city_stub' and the grey lines represent the other""metropolitan areas in the control group. The top figure shows the graph for the logarithm of weekly wages, the figure""in the middle shows it for the employment and the bottom figure for inactivity.", ///
+		      size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+		graph display, ysize(5) xsize(6.5)
+		graph export "../figures/placebo_`education_level'_houston.png", replace
+		}
   
   end
   
@@ -149,11 +167,9 @@
 	local city_stub = proper("`city'")
 	local data_legend = upper("`data_stub'")
 	
-	graph combine `plots', rows(3) graphregion(color(white)) ysize(8) xsize(6.5) ///
-	       title({bf: `data_legend' - `city_stub': `title' Placebo Checks}, color(black) size(small)) ///
-		   note("{it:Note:} Each graph reports the difference in the outcome variable between treated group and""synthetic control, assuming a treatment in 2005, for 86 metropolitan areas. The bold blue line""represents `city_stub' and the grey lines represent the other metropolitan areas in the control group.""The top figure shows the graph for the logarithm of weekly wages, the figure in the middle""shows it for the employment and the bottom figure for inactivity.", size(vsmall)) ///
-		   caption("{it:Source:} CPS `data_legend' 1996 - 2014.", size(vsmall))
-	graph export "../figures/`data_stub'_placebo`level'`city'", replace as(eps)
+	qui graph combine `plots', rows(3) graphregion(color(white)) ysize(8) xsize(6.5) ///
+	       title({bf: `data_legend'}, color(black) size(small))
+	graph save `data_stub'_placebo`level'`city'.gph, replace
   
   end 
 

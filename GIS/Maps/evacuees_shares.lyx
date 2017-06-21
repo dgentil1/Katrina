@@ -78,16 +78,12 @@ status open
 
 \begin_layout Plain Layout
 
-\end_layout
-
-\begin_layout Plain Layout
-
 \series bold
 \size large
 \begin_inset Caption Standard
 
 \begin_layout Plain Layout
-Share of evacuees by MSA for MORG and ASEC
+Share of evacuees by MSA
 \end_layout
 
 \end_inset
@@ -96,7 +92,7 @@ Share of evacuees by MSA for MORG and ASEC
 \end_layout
 
 \begin_layout Plain Layout
-\begin_inset VSpace defskip
+\begin_inset VSpace bigskip
 \end_inset
 
 
@@ -139,6 +135,57 @@ MORG
 \end_layout
 
 \begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\series bold
+\size large
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+MSA's by treatment status
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename sample groups.pdf
+	scale 40
+
+\end_inset
+
 
 \end_layout
 
