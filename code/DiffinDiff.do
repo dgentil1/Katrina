@@ -57,9 +57,7 @@
 	    outcomes(`outcome_vars') stub(`stub_list')
 		
     grc1leg checkslong_asec.gph checkslong_morg.gph, cols(2) legendfrom(checkslong_asec.gph) position(6) /// 
-		   graphregion(color(white)) ///
-		   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line) and control group (red line) across""time. The vertical line, representing the beginning of the post-treatment period, is depicted for the year 2005. The top""figure shows the graph for the logarithm of weekly wages, the figure in the middle shows it for the employment and the""bottom figure for inactivity.", ///
-		   size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+		   graphregion(color(white)) 
 	graph display, ysize(5) xsize(6.5)
 	graph export "../figures/checkslong.png", replace	
 	
@@ -95,9 +93,7 @@
 		local education_level: word `i' of `education_levels'
 		local education_title: word `i' of `education_titles'
 		grc1leg checkslong_asec`education_level'.gph checkslong_morg.gph, cols(2) legendfrom(checkslong_asec`education_level'.gph) position(6) /// 
-			   graphregion(color(white)) ///
-			   note("{it:Note:} Each graph shows the trend of the outcome variables for both treatment (blue line) and control group (red line) across""time. The vertical line, representing the beginning of the post-treatment period, is depicted for the year 2005. The top""figure shows the graph for the logarithm of weekly wages, the figure in the middle shows it for the employment and the""bottom figure for inactivity.", ///
-		       size(vsmall)) caption("{it:Source:} CPS ASEC and MORG 1996 - 2014.", size(vsmall))
+			   graphregion(color(white))
 		graph display, ysize(5) xsize(6.5)
 		graph export "../figures/checkslong_`education_level'.png", replace
 		}
@@ -163,8 +159,7 @@
 	
 	esttab using "../tables/`sample'did_synth_`var'_`city'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`sample_legend' - Diff-in-Diff for `stub'\label{tab1}) ///
-		   mtitles("Synthetic Control") ///
-		   addnote("{it:Note:} Robust standard errors in parentheses.")
+		   mtitles("Synthetic Control") 
 	
     eststo clear
 	
@@ -172,8 +167,7 @@
 	
 	esttab using "../tables/`sample'did_synth_`var'_`city'`educ_level'_short.tex", label se ar2 compress replace nonotes ///
 		   title(`sample_legend' - Short term Diff-in-Diff for `stub'\label{tab1}) ///
-		   mtitles("Synthetic Control") ///
-		   addnote("{it:Note:} Robust standard errors in parentheses.")
+		   mtitles("Synthetic Control")
 
   end
 
@@ -270,8 +264,7 @@
 
 	esttab using "../tables/diffindiff`data_stub'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`data_legend' `educ_stub' Diff-in-Diff for Treatment vs Control Group, CPS `data_legend' Sample \label{tab5}) keep(treat_expanded postkat did_treat) ///
-		   mtitles("Log Wage" "Employment Share" "Inactivity Share")   ///
-		   addnote("{Note:} Observations are weighted using CPS weights, robust standard errors in parentheses" "are clustered at the metropolitan area level. We include individual level covariates (age," "age-squared, sex,marital status, the interaction of sex and marital status, education, ethnicity, industry and occupation)." "We also use year and metropolitan area fixed effects." "Source: CPS March Supplement 1996 - 2014.")
+		   mtitles("Log Wage" "Employment Share" "Inactivity Share") 
 	   
 	eststo clear
 		
@@ -284,8 +277,7 @@
 
 	esttab using "../tables/short_diffindiff`data_stub'`educ_level'.tex", label se ar2 compress replace nonotes ///
 		   title(`data_legend' `educ_stub' Short term Diff-in-Diff for Treatment vs Control Group, CPS `data_legend' Sample \label{tab5}) keep(treat_expanded postkat_short did_treat_short) ///
-		   mtitles("Log Wage" "Employment Share" "Inactivity Share")   ///
-		   addnote("{Note:} Observations are weighted using CPS weights, robust standard errors in parentheses" "are clustered at the metropolitan area level. We include individual level covariates (age," "age-squared, sex,marital status, the interaction of sex and marital status, education, ethnicity, industry and occupation)." "We also use year and metropolitan area fixed effects." "Source: CPS March Supplement 1996 - 2014.")
+		   mtitles("Log Wage" "Employment Share" "Inactivity Share")  
 	   
   end
 
