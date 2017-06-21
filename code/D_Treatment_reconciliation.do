@@ -9,14 +9,14 @@
   
     use "../derived_asec/CPSASECfinal.dta", clear
 	collapse share_evac share_evac_sd obs treat treat_expanded control kat_affected, by(metcode2)
-	gen share_evac_se = share_evac_sd / obs
+	gen share_evac_se = share_evac_sd / sqrt(obs)
 	rename (share_evac share_evac_sd share_evac_se obs treat treat_expanded control) =_asec
 	save "../derived_asec/metarea_list_asec.dta", replace
 
 	use "../derived_morg/MORGfinal.dta", clear
 	keep if cities_in_sample == 1 
 	collapse share_evac share_evac_sd obs treat treat_expanded control cities_in_sample, by(metcode2)
-	gen share_evac_se = share_evac_sd / obs
+	gen share_evac_se = share_evac_sd / sqrt(obs)
 	rename (share_evac share_evac_sd share_evac_se obs treat treat_expanded control) =_morg
 	save "../derived_morg/metarea_list_morg.dta", replace
 	
@@ -32,13 +32,17 @@
 	replace control = 0 if control_asec == 0 & control_morg == 0
 	
 	
-	*** We should create table 3 here ****
+	/* We should create table 3 here. The results of what is posted on the draft are obtained by copying manually after doing:
+    br metcode2 share_evac_asec share_evac_se_asec share_evac_morg share_evac_se_morg if treat_expanded == 1
+	*/
 	
 	save "../temp/treat_reconciliation.dta", replace
 	
  *** Merge back to full dataset
 	
 	use "../derived_asec/CPSASECfinal.dta", clear
+	
+	drop treat treat_expanded control
 		
 	merge m:1 metcode2 using "../temp/treat_reconciliation.dta", nogen ///
 	    keepusing(treat treat_expanded control cities_in_sample) keep(3)
@@ -48,9 +52,11 @@
 	save "../derived_asec/CPSASECfinal.dta", replace
 	
     use "../derived_morg/MORGfinal.dta", clear
+	
+	drop treat treat_expanded control
 		
 	merge m:1 metcode2 using "../temp/treat_reconciliation.dta", nogen ///
-	    keepusing(treat treat_expanded control cities_in_sample) keep(3)
+	    keepusing(treat treat_expanded control) keep(3)
 	
 	save "../derived_morg/MORGfinal.dta", replace
 
